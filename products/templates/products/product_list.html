@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">All Games</h1>
+
+<div class="row">
+    {% for game in games %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+
+            {% if game.image %}
+            <img src="{{ game.image.url }}" class="card-img-top" alt="{{ game.title }}">
+            {% else %}
+            <img src="https://via.placeholder.com/300x200?text=No+Image" class="card-img-top">
+            {% endif %}
+
+            <div class="card-body">
+                <h5 class="card-title">{{ game.title }}</h5>
+                <p class="card-text text-muted">{{ game.platform }}</p>
+                <p class="fw-bold">£{{ game.price }}</p>
+            </div>
+
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
