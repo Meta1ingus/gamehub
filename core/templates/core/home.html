@@ -1,6 +1,15 @@
-{% extends 'base.html' %}
+{% extends 'products/base.html' %}
+
+{% block title %}Home - GameHub{% endblock %}
 
 {% block content %}
 <h1>Welcome to GameHub</h1>
-<p>My homepage is now using the base template.</p>
+<p>Your place to browse games by platform or genre.</p>
+
+<h2>Browse</h2>
+<ul>
+    <li><a href="/products/">All Games</a></li>
+    <li><a href="/platforms/">Platforms</a></li>
+    <li><a href="/genres/">Genres</a></li>
+</ul>
 {% endblock %}

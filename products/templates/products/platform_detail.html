@@ -1,0 +1,9 @@
+<h1>{{ platform.name }}</h1>
+<h2>Games</h2>
+<ul>
+    {% for game in games %}
+        <li>{{ game.title }}</li>
+    {% empty %}
+        <li>No games for this platform yet.</li>
+    {% endfor %}
+</ul>

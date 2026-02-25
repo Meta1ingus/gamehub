@@ -1,0 +1,9 @@
+<h1>{{ genre.name }}</h1>
+<h2>Games</h2>
+<ul>
+    {% for game in games %}
+        <li>{{ game.title }}</li>
+    {% empty %}
+        <li>No games for this genre yet.</li>
+    {% endfor %}
+</ul>

@@ -15,7 +15,11 @@
             {% endif %}
 
             <div class="card-body">
-                <h5 class="card-title">{{ game.title }}</h5>
+                <h5 class="card-title">
+                    <a href="{% url 'product_detail' game.slug %}" class="text-decoration-none">
+                        {{ game.title }}
+                    </a>
+                </h5>
                 <p class="card-text text-muted">{{ game.platform }}</p>
                 <p class="fw-bold">£{{ game.price }}</p>
             </div>

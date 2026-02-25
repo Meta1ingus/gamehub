@@ -1,0 +1,8 @@
+<h1>Platforms</h1>
+<ul>
+    {% for platform in platforms %}
+        <li><a href="{% url 'platform_detail' platform.slug %}">{{ platform.name }}</a></li>
+    {% empty %}
+        <li>No platforms yet.</li>
+    {% endfor %}
+</ul>

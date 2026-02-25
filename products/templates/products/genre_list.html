@@ -1,0 +1,8 @@
+<h1>Genres</h1>
+<ul>
+    {% for genre in genres %}
+        <li><a href="{% url 'genre_detail' genre.slug %}">{{ genre.name }}</a></li>
+    {% empty %}
+        <li>No genres yet.</li>
+    {% endfor %}
+</ul>
