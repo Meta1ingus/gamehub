@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load currency %}
 
 {% block content %}
 
@@ -29,7 +30,7 @@
                     </a>
                 </h5>
                 <p class="card-text text-muted">{{ game.platform }}</p>
-                <p class="fw-bold">£{{ game.price }}</p>
+                <p class="fw-bold">{{ game.price|currency }}</p>
             </div>
 
         </div>

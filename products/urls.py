@@ -14,6 +14,12 @@ urlpatterns = [
     path('genres/', views.genre_list, name='genre_list'),
     path('genres/<slug:slug>/', views.genre_detail, name='genre_detail'),
 
+    path('cart/', views.cart_detail, name='cart_detail'),
+    path('cart/add/<int:game_id>/', views.cart_add, name='cart_add'),
+    path('cart/remove/<int:game_id>/', views.cart_remove, name='cart_remove'),
+    path('cart/update/<int:game_id>/', views.cart_update, name='cart_update'),
+    path('cart/clear/', views.cart_clear, name='cart_clear'),
+
     path('<slug:slug>/', views.product_detail, name='product_detail'),
 
 ]
