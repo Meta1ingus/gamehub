@@ -1,9 +1,40 @@
-<h1>{{ genre.name }}</h1>
-<h2>Games</h2>
-<ul>
+{% extends "base.html" %}
+
+{% block title %}{{ genre.name }}{% endblock %}
+
+{% block content %}
+
+<!-- Header / Banner -->
+<div class="mb-4 p-4 text-white rounded"
+     style="
+        {% if genre.image %}
+            background: url('{{ genre.image.url }}') center/cover no-repeat;
+        {% else %}
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+        {% endif %}
+     ">
+    <h1 class="fw-bold">{{ genre.name }}</h1>
+    <p class="mb-0">Games in this genre.</p>
+</div>
+
+<!-- Games Grid -->
+<div class="row">
     {% for game in games %}
-        <li>{{ game.title }}</li>
+    <div class="col-md-3 mb-4">
+        <a href="{% url 'game_detail' game.slug %}" class="text-decoration-none text-white">
+            <div class="card bg-dark text-white shadow-sm" style="height: 100%;">
+                {% if game.image %}
+                <img src="{{ game.image.url }}" class="card-img-top" alt="{{ game.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ game.title }}</h5>
+                </div>
+            </div>
+        </a>
+    </div>
     {% empty %}
-        <li>No games for this genre yet.</li>
+    <p>No games available in this genre yet.</p>
     {% endfor %}
-</ul>
+</div>
+
+{% endblock %}

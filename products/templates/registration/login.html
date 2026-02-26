@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+
+        <h2 class="fw-bold mb-4 text-center">Login</h2>
+
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                Invalid username or password.
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                {{ form.username }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                {{ form.password }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+
+        <p class="text-center mt-3">
+            Don’t have an account?
+            <a href="{% url 'register' %}">Register</a>
+        </p>
+
+    </div>
+</div>
+{% endblock %}

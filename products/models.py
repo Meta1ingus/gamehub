@@ -4,6 +4,7 @@ from django.utils.text import slugify
 class Platform(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(unique=True, blank=True)
+    image = models.ImageField(upload_to='platform_textures/', blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -18,6 +19,7 @@ class Platform(models.Model):
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True, blank=True)
+    image = models.ImageField(upload_to='genre_textures/', blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -36,6 +38,8 @@ class Game(models.Model):
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='game_images/', blank=True)
+
+    featured = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.slug:
