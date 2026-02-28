@@ -3,15 +3,47 @@
 
 {% block content %}
 
-<!-- Hero Section -->
-<div class="mb-5 text-center">
-    <h1 class="fw-bold">Welcome to GameHub</h1>
-    <p class="text-muted">Browse by platform, genre, or explore all games.</p>
-</div>
+<!-- Storefront Heading -->
+<h1 class="mb-4 text-center fw-bold">All Games</h1>
 
-<!-- Featured Games Section -->
-<h1 class="mb-4">Featured Games</h1>
+<!-- Filters -->
+<form method="get" class="row mb-4">
 
+    <div class="col-md-3">
+        <select name="platform" class="form-select" onchange="this.form.submit()">
+            <option value="">Platform</option>
+            {% for p in platforms %}
+            <option value="{{ p.slug }}" {% if current_platform == p.slug %}selected{% endif %}>
+                {{ p.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <select name="genre" class="form-select" onchange="this.form.submit()">
+            <option value="">Genre</option>
+            {% for g in genres %}
+            <option value="{{ g.slug }}" {% if current_genre == g.slug %}selected{% endif %}>
+                {{ g.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <select name="sort" class="form-select" onchange="this.form.submit()">
+            <option value="">Sorting…</option>
+            <option value="price_asc" {% if current_sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+            <option value="title_asc" {% if current_sort == 'title_asc' %}selected{% endif %}>Title: A → Z</option>
+            <option value="title_desc" {% if current_sort == 'title_desc' %}selected{% endif %}>Title: Z → A</option>
+        </select>
+    </div>
+
+</form>
+
+<!-- Game Grid -->
 <div class="row">
     {% for game in games %}
     <div class="col-md-4 mb-4">
@@ -38,40 +70,46 @@
     {% endfor %}
 </div>
 
+<!-- Pagination -->
 {% if games.has_other_pages %}
 <nav aria-label="Games pagination">
     <ul class="pagination justify-content-center mt-4">
+
         {% if games.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ games.previous_page_number }}">Previous</a>
+            <a class="page-link"
+               href="?page={{ games.previous_page_number }}&q={{ query|default:'' }}&sort={{ current_sort|default:'' }}&platform={{ current_platform|default:'' }}&genre={{ current_genre|default:'' }}">
+                Previous
+            </a>
         </li>
         {% else %}
-        <li class="page-item disabled">
-            <span class="page-link">Previous</span>
-        </li>
+        <li class="page-item disabled"><span class="page-link">Previous</span></li>
         {% endif %}
 
         {% for num in games.paginator.page_range %}
-        {% if num == games.number %}
-        <li class="page-item active">
-            <span class="page-link">{{ num }}</span>
-        </li>
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-        </li>
-        {% endif %}
+            {% if num == games.number %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ num }}&q={{ query|default:'' }}&sort={{ current_sort|default:'' }}&platform={{ current_platform|default:'' }}&genre={{ current_genre|default:'' }}">
+                    {{ num }}
+                </a>
+            </li>
+            {% endif %}
         {% endfor %}
 
         {% if games.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ games.next_page_number }}">Next</a>
+            <a class="page-link"
+               href="?page={{ games.next_page_number }}&q={{ query|default:'' }}&sort={{ current_sort|default:'' }}&platform={{ current_platform|default:'' }}&genre={{ current_genre|default:'' }}">
+                Next
+            </a>
         </li>
         {% else %}
-        <li class="page-item disabled">
-            <span class="page-link">Next</span>
-        </li>
+        <li class="page-item disabled"><span class="page-link">Next</span></li>
         {% endif %}
+
     </ul>
 </nav>
 {% endif %}

@@ -5,7 +5,7 @@ from django.urls import include
 from products import views as products_views
 
 urlpatterns = [
-    path('', products_views.product_list, name='home'),
+    path("", core_views.home, name="home"),
     path('products/', include('products.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
