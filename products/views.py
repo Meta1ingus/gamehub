@@ -44,12 +44,18 @@ def product_list(request):
     genres = Genre.objects.all()
 
     # Pagination
-    paginator = Paginator(games, 9)
-    page_number = request.GET.get('page')
-    games_page = paginator.get_page(page_number)
+    per_page = request.GET.get("per_page", 12)  # default 12
+    if per_page == "all":
+        per_page = games.count()
+    else:
+        per_page = int(per_page)
+
+    paginator = Paginator(games, per_page)
+    page_number = request.GET.get("page")
+    games = paginator.get_page(page_number)
 
     return render(request, 'products/product_list.html', {
-        'games': games_page,
+        'games': games,
         'current_sort': sort,
         'current_platform': platform_slug,
         'current_genre': genre_slug,

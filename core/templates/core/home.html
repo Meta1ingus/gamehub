@@ -1,129 +1,83 @@
 {% extends 'base.html' %}
 {% load currency %}
+{% load static %}
 
 {% block content %}
 
 <!-- Hero Section -->
 <div class="mb-5 text-center">
     <h1 class="fw-bold">Welcome to GameHub</h1>
-    <p class="text-muted">Browse by platform, genre, or explore all games.</p>
+    <p class="text-muted">Discover featured games or browse by platform and genre.</p>
 </div>
 
-<form method="get" class="row mb-4">
+<!-- Featured Carousel -->
+<div id="featuredCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+    <div class="carousel-inner">
 
-    <div class="col-md-3">
-        <select name="platform" class="form-select" onchange="this.form.submit()">
-            <option value="">Platform</option>
-            {% for p in platforms %}
-            <option value="{{ p.slug }}" {% if current_platform == p.slug %}selected{% endif %}>
-                {{ p.name }}
-            </option>
-            {% endfor %}
-        </select>
-    </div>
+        {% for game in games %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %} position-relative">
 
-    <div class="col-md-3">
-        <select name="genre" class="form-select" onchange="this.form.submit()">
-            <option value="">Genre</option>
-            {% for g in genres %}
-            <option value="{{ g.slug }}" {% if current_genre == g.slug %}selected{% endif %}>
-                {{ g.name }}
-            </option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <div class="col-md-3">
-        <select name="sort" class="form-select" onchange="this.form.submit()">
-            <option value="">Sorting…</option>
-            <option value="price_asc" {% if current_sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
-            <option value="price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
-            <option value="title_asc" {% if current_sort == 'title_asc' %}selected{% endif %}>Title: A → Z</option>
-            <option value="title_desc" {% if current_sort == 'title_desc' %}selected{% endif %}>Title: Z → A</option>
-        </select>
-    </div>
-
-</form>
-
-<!-- Featured Games Section -->
-<h1 class="mb-4">Featured Games</h1>
-
-<div class="row">
-    {% for game in games %}
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-
-            {% if game.image %}
-            <img src="{{ game.image.url }}" class="card-img-top" alt="{{ game.title }}">
+            {% if game.hero_image %}
+            <img src="{{ game.hero_image.url }}" class="d-block w-100" alt="{{ game.title }}">
             {% else %}
-            <img src="https://via.placeholder.com/300x200?text=No+Image" class="card-img-top">
+            <img src="https://via.placeholder.com/1200x400?text={{ game.title|urlencode }}" class="d-block w-100">
             {% endif %}
 
-            <div class="card-body">
-                <h5 class="card-title">
-                    <a href="{% url 'product_detail' game.slug %}" class="text-decoration-none">
-                        {{ game.title }}
+            <div class="carousel-caption d-none d-md-block text-start">
+                <div class="bg-dark bg-opacity-50 p-3 rounded">
+                    <h3 class="fw-bold mb-1">{{ game.title }}</h3>
+                    <p class="mb-1">{{ game.platform }}</p>
+                    <p class="fw-bold mb-2">{{ game.price|currency }}</p>
+                    <a href="{% url 'product_detail' game.slug %}" class="btn btn-primary btn-sm">
+                        View Game
                     </a>
-                </h5>
-                <p class="card-text text-muted">{{ game.platform }}</p>
-                <p class="fw-bold">{{ game.price|currency }}</p>
+                </div>
             </div>
 
         </div>
+        {% endfor %}
+
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+
+    <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+<!-- Browse by Platform -->
+<h2 class="fw-bold mt-5 mb-3">Browse by Platform</h2>
+
+<div class="row g-3">
+    {% for p in platforms %}
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+        <a href="{% url 'product_list' %}?platform={{ p.slug }}" class="text-decoration-none">
+            <div class="card h-100 text-center shadow-sm p-2">
+                <img src="{% static 'core/platforms/' %}{{ p.slug }}.png" class="img-fluid mb-2" alt="{{ p.name }}">
+                <h6 class="mb-0">{{ p.name }}</h6>
+            </div>
+        </a>
     </div>
     {% endfor %}
 </div>
 
-{% if games.has_other_pages %}
-<nav aria-label="Games pagination">
-    <ul class="pagination justify-content-center mt-4">
+<!-- Browse by Genre -->
+<h2 class="fw-bold mt-5 mb-3">Browse by Genre</h2>
 
-        {# Previous button #}
-        {% if games.has_previous %}
-        <li class="page-item">
-            <a class="page-link"
-               href="?page={{ games.previous_page_number }}&q={{ query|default:'' }}&sort={{ current_sort|default:'' }}&platform={{ current_platform|default:'' }}&genre={{ current_genre|default:'' }}">
-                Previous
-            </a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <span class="page-link">Previous</span>
-        </li>
-        {% endif %}
-
-        {# Page numbers #}
-        {% for num in games.paginator.page_range %}
-            {% if num == games.number %}
-            <li class="page-item active">
-                <span class="page-link">{{ num }}</span>
-            </li>
-            {% else %}
-            <li class="page-item">
-                <a class="page-link"
-                   href="?page={{ num }}&q={{ query|default:'' }}&sort={{ current_sort|default:'' }}&platform={{ current_platform|default:'' }}&genre={{ current_genre|default:'' }}">
-                    {{ num }}
-                </a>
-            </li>
-            {% endif %}
-        {% endfor %}
-
-        {# Next button #}
-        {% if games.has_next %}
-        <li class="page-item">
-            <a class="page-link"
-               href="?page={{ games.next_page_number }}&q={{ query|default:'' }}&sort={{ current_sort|default:'' }}&platform={{ current_platform|default:'' }}&genre={{ current_genre|default:'' }}">
-                Next
-            </a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <span class="page-link">Next</span>
-        </li>
-        {% endif %}
-
-    </ul>
-</nav>
-{% endif %}
+<div class="row g-3 mb-5">
+    {% for g in genres %}
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+        <a href="{% url 'product_list' %}?genre={{ g.slug }}" class="text-decoration-none">
+            <div class="card h-100 text-center shadow-sm p-2">
+                <img src="{% static 'core/genres/' %}{{ g.slug }}.png" class="img-fluid mb-2" alt="{{ g.name }}">
+                <h6 class="mb-0">{{ g.name }}</h6>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
 
 {% endblock %}

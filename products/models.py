@@ -38,6 +38,7 @@ class Game(models.Model):
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='game_images/', blank=True)
+    hero_image = models.ImageField(upload_to='hero_images/', blank=True, null=True)
 
     featured = models.BooleanField(default=False)
 
