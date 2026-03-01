@@ -1,14 +1,55 @@
-# Environments
-env/
-venv/
-ENV/
-
-# Python cache
+# Python cache / compiled
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
 
-# OS files
+# Virtual environments
+env/
+venv/
+.venv/
+ENV/
+
+# Django database & logs
+db.sqlite3
+*.log
+
+# Django static build output
+staticfiles/
+static_root/
+
+# User-uploaded media
+media/
+
+# Environment variables / secrets
+*.env
+.env.*
+settings_local.py
+local_settings.py
+
+# IDE / Editor files
+.vscode/
+.idea/
+
+# OS clutter
 .DS_Store
 Thumbs.db
 
-management/
+# Packaging / build artifacts
+*.egg-info/
+.eggs/
+dist/
+build/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test / coverage
+.coverage
+htmlcov/
+.tox/
+pytest_cache/
+
+# Type checking
+.mypy_cache/
+.pyright/
+.dmypy.json
