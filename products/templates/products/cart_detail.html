@@ -5,7 +5,7 @@
 
 <h1 class="mb-4">Your Cart</h1>
 
-{% if cart|length == 0 %}
+{% if items|length == 0 %}
 
 <div class="p-4 border rounded bg-light">
     <h4 class="mb-2">Your cart is empty</h4>
@@ -26,7 +26,7 @@
     </thead>
 
     <tbody>
-        {% for item in cart %}
+        {% for item in items %}
         <tr>
             <td>
                 <a href="{% url 'product_detail' item.game.slug %}">
@@ -63,17 +63,17 @@
 
     <div class="d-flex justify-content-between text-muted mb-1">
         <span>Items</span>
-        <span>{{ cart|length }}</span>
+        <span>{{ items|length }}</span>
     </div>
 
     <div class="d-flex justify-content-between text-muted mb-3">
         <span>Total Quantity</span>
-        <span>{{ cart.get_total_quantity }}</span>
+        <span>{{ total_quantity }}</span>
     </div>
 
     <div class="d-flex justify-content-between">
         <span>Subtotal</span>
-        <strong>{{ cart.get_total_price|currency }}</strong>
+        <strong>{{ total_price|currency }}</strong>
     </div>
 
     <div class="d-flex justify-content-between text-muted mt-1">
@@ -85,7 +85,7 @@
 
     <div class="d-flex justify-content-between">
         <span>Total</span>
-        <strong>{{ cart.get_total_price|currency }}</strong>
+        <strong>{{ total_price|currency }}</strong>
     </div>
 </div>
 

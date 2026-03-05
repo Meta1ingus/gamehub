@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.views.decorators.http import require_POST
 from .cart import Cart
 from django.db.models import Q, Count
+from django.contrib import messages
 
 def product_list(request):
     games = Game.objects.all()
@@ -99,40 +100,9 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Your account has been created. You can now log in.")
             return redirect('login')
     else:
         form = UserCreationForm()
 
-    return render(request, "registration/register.html", {"form": form})
-
-def cart_detail(request):
-    cart = Cart(request)
-    return render(request, 'products/cart_detail.html', {'cart': cart})
-
-@require_POST
-def cart_add(request, game_id):
-    cart = Cart(request)
-    game = get_object_or_404(Game, id=game_id)
-    cart.add(game=game, quantity=1)
-    return redirect('product_detail', slug=game.slug)
-
-@require_POST
-def cart_remove(request, game_id):
-    cart = Cart(request)
-    game = get_object_or_404(Game, id=game_id)
-    cart.remove(game)
-    return redirect('cart_detail')
-
-@require_POST
-def cart_update(request, game_id):
-    cart = Cart(request)
-    game = get_object_or_404(Game, id=game_id)
-    quantity = int(request.POST.get('quantity', 1))
-    cart.add(game=game, quantity=quantity, override_quantity=True)
-    return redirect('cart_detail')
-
-@require_POST
-def cart_clear(request):
-    cart = Cart(request)
-    cart.clear()
-    return redirect('cart_detail')
+    return render(request, 'registration/register.html', {'form': form})

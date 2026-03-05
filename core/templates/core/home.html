@@ -6,7 +6,7 @@
 
 <!-- Hero Section -->
 <div class="mb-5 text-center">
-    <h1 class="fw-bold">Welcome to GameHub</h1>
+    <h1 class="fw-bold">Welcome to GamerBay</h1>
     <p class="text-muted">Discover featured games or browse by platform and genre.</p>
 </div>
 
@@ -55,7 +55,7 @@
     {% for p in platforms %}
     <div class="col-6 col-sm-4 col-md-3 col-lg-2">
         <a href="{% url 'product_list' %}?platform={{ p.slug }}" class="text-decoration-none">
-            <div class="card h-100 text-center shadow-sm p-2">
+            <div class="card card-tile h-100 text-center shadow-sm p-2">
                 <img src="{% static 'core/platforms/' %}{{ p.slug }}.png" class="img-fluid mb-2" alt="{{ p.name }}">
                 <h6 class="mb-0">{{ p.name }}</h6>
             </div>
@@ -71,7 +71,7 @@
     {% for g in genres %}
     <div class="col-6 col-sm-4 col-md-3 col-lg-2">
         <a href="{% url 'product_list' %}?genre={{ g.slug }}" class="text-decoration-none">
-            <div class="card h-100 text-center shadow-sm p-2">
+            <div class="card card-tile h-100 text-center shadow-sm p-2">
                 <img src="{% static 'core/genres/' %}{{ g.slug }}.png" class="img-fluid mb-2" alt="{{ g.name }}">
                 <h6 class="mb-0">{{ g.name }}</h6>
             </div>

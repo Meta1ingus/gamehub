@@ -28,6 +28,7 @@ INSTALLED_APPS = [
 
     'core',
     'products',
+    'cart.apps.CartConfig',
 ]
 
 MIDDLEWARE = [
@@ -49,10 +50,11 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'products.context_processors.cart',
+                'cart.context_processors.cart_item_count',
             ],
         },
     },
