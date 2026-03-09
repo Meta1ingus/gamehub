@@ -69,3 +69,75 @@ body {
 .nav-link:hover .neon-badge {
     box-shadow: 0 0 10px #00ff9d, 0 0 20px #00ff9d;
 }
+
+/* Additional GamerBay product detail styles */
+
+.gamerbay-pill {
+    letter-spacing: 0.06em;
+    font-size: 0.7rem;
+    border-radius: 999px;
+}
+
+.gamerbay-title {
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+.gamerbay-pricebox {
+    background: #111;
+    border: 1px solid #222;
+    box-shadow: 0 0 12px rgba(0, 255, 157, 0.15);
+}
+
+.gamerbay-pricebox h3 {
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+.gamerbay-pricebox .btn-primary {
+    background: #00ff9d;
+    border-color: #00ff9d;
+    color: #000;
+    font-weight: 600;
+    box-shadow: 0 0 8px #00ff9d;
+}
+
+.gamerbay-pricebox .btn-primary:hover {
+    background: #00e68d;
+    border-color: #00e68d;
+    box-shadow: 0 0 12px #00ff9d;
+}
+
+.gamerbay-section {
+    background: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(0, 255, 157, 0.08);
+}
+
+.gamerbay-section-title {
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 1rem;
+    color: #00ff9d;
+    text-transform: uppercase;
+    font-size: 1rem;
+}
+
+.gamerbay-related-card {
+    background: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gamerbay-related-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 12px rgba(0, 255, 157, 0.15);
+}
+
+.gamerbay-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.9;
+}
