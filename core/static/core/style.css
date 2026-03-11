@@ -137,7 +137,9 @@ body {
 }
 
 .gamerbay-icon {
-    width: 16px;
-    height: 16px;
-    opacity: 0.9;
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    display: inline-block;
+    vertical-align: middle;
 }

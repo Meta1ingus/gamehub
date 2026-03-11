@@ -1,38 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   width="139.14099"
-   height="51.375095"
+   width="100"
+   height="36.923046"
    version="1.1"
    id="svg17"
-   sodipodi:docname="NES_logo.svg"
-   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
      id="defs17" />
-  <sodipodi:namedview
-     id="namedview17"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="2.0626551"
-     inkscape:cx="69.570525"
-     inkscape:cy="25.695037"
-     inkscape:window-width="1280"
-     inkscape:window-height="730"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg17" />
   <g
      id="g48"
-     transform="matrix(0.3698585,0,0,0.3698585,-20.42467,-36.265977)">
+     transform="matrix(0.26581561,0,0,0.26581561,-14.679117,-26.064192)">
     <path
        d="m 126.74968,98.053798 c -24.69067,-0.05733 -41.277343,17.695942 -41.277343,38.974612 0,21.27466 16.547883,38.82651 41.310543,38.83984 h 233.23047 c 24.76667,-0.0133 41.32032,-17.56518 41.32032,-38.83984 0,-21.28134 -16.58916,-39.033279 -41.28516,-38.974612 z m 233.18945,9.570312 c 19.60934,0.04 31.64063,13.14285 31.64063,29.35352 0,16.208 -11.96063,29.42027 -31.64063,29.34961 H 126.85906 c -19.68267,0.0707 -31.638676,-13.14161 -31.638676,-29.34961 0,-16.20934 12.033336,-29.31023 31.638676,-29.35157 z"
        style="display:inline;fill:#ff0000"
@@ -40,8 +18,7 @@
     <path
        d="m 126.85906,107.62611 c -19.60534,0.0413 -31.638676,13.14223 -31.638676,29.35157 0,16.208 11.956006,29.42027 31.638676,29.34961 h 233.08007 c 19.68,0.0707 31.64063,-13.14161 31.64063,-29.34961 0,-16.21067 -12.03125,-29.35368 -31.64063,-29.35352 z"
        style="display:inline;fill:#ffffff"
-       id="path50"
-       sodipodi:nodetypes="csccssc" />
+       id="path50" />
     <path
        d="m 161.60124,118.57138 v 7.48632 h 11.03907 v -7.48632 z"
        style="display:inline;fill:#ff0000"
@@ -61,8 +38,7 @@
     <path
        d="m 370.03093,121.3038 v 6.24609 h 1.51953 v -2.55078 h 0.74414 l 1.18946,2.55078 h 1.68945 l -1.39453,-2.78125 c 0.856,-0.22266 1.36523,-0.84139 1.36523,-1.66406 0,-1.196 -0.88797,-1.80078 -2.66797,-1.80078 z m 1.51953,0.96094 h 0.66602 c 0.91066,0 1.36523,0.28302 1.36523,0.92968 0,0.62667 -0.42177,0.88672 -1.28711,0.88672 h -0.74414 z"
        style="display:inline;fill:#ff0000"
-       id="path59"
-       sodipodi:nodetypes="ccccccccssccssscc" />
+       id="path59" />
     <path
        d="m 216.89226,122.35067 0.008,4.9336 h -5.99023 v 3.61523 h 5.98437 l -0.002,24.31445 h 11.02734 l -0.002,-24.31445 h 5.95898 v -3.62695 h -5.95898 v -4.92188 z"
        style="display:inline;fill:#ff0000"
@@ -90,7 +66,7 @@
   </g>
   <g
      id="g76"
-     transform="matrix(0.41782174,0,0,0.41782174,-32.129259,-54.029466)">
+     transform="matrix(0.30028658,0,0,0.30028658,-23.091152,-38.83073)">
     <path
        id="path9"
        d="m 0,0 h -14.456 v -14.159 h 4.488 v 9.469 c 0,0.599 0.499,1.096 1.099,1.096 h 7.77 C -0.496,-3.594 0,-4.091 0,-4.69 v -9.469 H 4.488 V -4.69 C 4.488,-4.69 5.088,0 0,0"
