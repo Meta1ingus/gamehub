@@ -73,9 +73,12 @@
                         {{ game.title }}
                     </a>
                 </h5>
-                <p class="card-text text-muted">{{ game.platform }}</p>
+
+                {% include 'products/components/platform_badge.html' with platform=game.platform %}
+
                 <p class="fw-bold">{{ game.price|currency }}</p>
             </div>
+
 
         </div>
     </div>

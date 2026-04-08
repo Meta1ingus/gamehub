@@ -1,0 +1,10 @@
+{% load static %}
+
+<div class="platform-badge">
+    <img
+        class="platform-icon"
+        src="{% static 'core/platforms/' %}{{ platform.slug }}.svg"
+        alt="{{ platform.name }}"
+        title="{{ platform.name }}"
+    >
+</div>
