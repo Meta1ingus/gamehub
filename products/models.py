@@ -4,16 +4,28 @@ from django.utils.text import slugify
 class Platform(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(unique=True, blank=True)
+    
+    manufacturer = models.CharField(max_length=50)
+    manufacturer_slug = models.SlugField(blank=True)
+
     image = models.ImageField(upload_to='platform_textures/', blank=True, null=True)
 
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
+        from django.utils.text import slugify
+
+        # Existing behaviour — keep this
         if not self.slug:
-            from django.utils.text import slugify
             self.slug = slugify(self.name)
+
+        # ⭐ NEW BEHAVIOUR — auto‑generate manufacturer slug
+        if self.manufacturer and not self.manufacturer_slug:
+            self.manufacturer_slug = slugify(self.manufacturer)
+
         super().save(*args, **kwargs)
+
 
 
 class Genre(models.Model):

@@ -48,16 +48,17 @@
     </button>
 </div>
 
-<!-- Browse by Platform -->
-<h2 class="fw-bold mt-5 mb-3">Browse by Platform</h2>
+<!-- Browse by Brand -->
+<h2 class="fw-bold mt-5 mb-3">Browse by Brand</h2>
 
 <div class="row g-3">
-    {% for p in platforms %}
+    {% for m in manufacturers %}
     <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-        <a href="{% url 'product_list' %}?platform={{ p.slug }}" class="text-decoration-none">
-            <div class="card card-tile h-100 text-center shadow-sm p-2">
-                <img src="{% static 'core/platforms/' %}{{ p.slug }}.png" class="img-fluid mb-2" alt="{{ p.name }}">
-                <h6 class="mb-0">{{ p.name }}</h6>
+        <a href="{% url 'categories' %}#{{ m.manufacturer_slug }}" class="text-decoration-none">
+            <div class="card card-tile h-100 text-center shadow-sm p-3">
+                <img src="{% static 'core/manufacturers/' %}{{ m.manufacturer_slug }}.svg"
+                     class="img-fluid mb-2" alt="{{ m.manufacturer }}">
+                <h6 class="mb-0">{{ m.manufacturer }}</h6>
             </div>
         </a>
     </div>
@@ -72,7 +73,7 @@
     <div class="col-6 col-sm-4 col-md-3 col-lg-2">
         <a href="{% url 'product_list' %}?genre={{ g.slug }}" class="text-decoration-none">
             <div class="card card-tile h-100 text-center shadow-sm p-2">
-                <img src="{% static 'core/genres/' %}{{ g.slug }}.png" class="img-fluid mb-2" alt="{{ g.name }}">
+                <img src="{% static 'core/genres/' %}{{ g.slug }}.svg" class="img-fluid mb-2" alt="{{ g.name }}">
                 <h6 class="mb-0">{{ g.name }}</h6>
             </div>
         </a>

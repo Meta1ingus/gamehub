@@ -27,12 +27,14 @@
             {% endif %}
 
             <span class="badge bg-dark text-uppercase gamerbay-pill me-1 d-inline-flex align-items-center">
-                <img src="{% static 'core/platforms/' %}{{ platform_icon }}" class="gamerbay-icon me-1">
+                <img src="{% static 'core/platforms/' %}{{ game.platform.slug }}.svg" class="gamerbay-icon me-1"
+                    alt="{{ game.platform.name }} icon">
                 {{ game.platform }}
             </span>
 
             <span class="badge bg-secondary text-uppercase gamerbay-pill d-inline-flex align-items-center">
-                <img src="{% static 'core/genres/' %}{{ genre_icon }}" class="gamerbay-icon me-1">
+                <img src="{% static 'core/genres/' %}{{ game.genre.slug }}.svg" class="gamerbay-icon me-1"
+                    alt="{{ game.genre.name }} icon">
                 {{ game.genre }}
             </span>
 

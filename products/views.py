@@ -71,91 +71,8 @@ def product_list(request):
 def product_detail(request, slug):
     game = get_object_or_404(Game, slug=slug)
 
-    # PLATFORM ICON LOGIC
-    platform_slug = game.platform.slug.lower()
-
-    PLATFORM_ICONS = {
-        # --- Brand-level categories ---
-        "xbox": "xbox.svg",
-        "playstation": "playstation.svg",
-        "nintendo": "nintendo.svg",
-        "pc": "pc.svg",
-
-        # --- Xbox consoles ---
-        "xboxseries": "xboxseries.svg",
-        "xboxone": "xboxone.svg",
-        "xbox360": "xbox360.svg",
-        "xboxoriginal": "xboxoriginal.svg",
-        "xboxpc": "xboxpc.svg",  # Xbox Game Pass PC
-
-        # --- PlayStation consoles ---
-        "ps5": "ps5.svg",
-        "ps4": "ps4.svg",
-        "ps3": "ps3.svg",
-        "ps2": "ps2.svg",
-        "ps1": "ps1.svg",
-        "psvita": "psvita.svg",
-        "psp": "psp.svg",
-
-        # --- Nintendo consoles ---
-        "switch": "switch.svg",
-        "switch2": "switch2.svg",
-        "wiiu": "wiiu.svg",
-        "wii": "wii.svg",
-        "gamecube": "gamecube.svg",
-        "n64": "n64.svg",
-        "snes": "snes.svg",
-        "nes": "nes.svg",
-
-        # --- Nintendo handhelds ---
-        "ds": "ds.svg",
-        "dsi": "dsi.svg",
-        "3ds": "3ds.svg",
-        "new3ds": "new3ds.svg",
-        "gba": "gba.svg",
-        "gbc": "gbc.svg",
-        "gb": "gb.svg",
-
-        # --- PC storefronts ---
-        "steam": "steam.svg",
-        "epicgames": "epicgames.svg",
-        "gog": "gog.svg",
-        "battlenet": "battlenet.svg",
-        "ea": "ea.svg",
-        "ubisoft": "ubisoft.svg",
-    }
-
-
-    # --- Exact match first ---
-    platform_icon = PLATFORM_ICONS.get(platform_slug)
-
-    # --- Prefix match fallback ---
-    if not platform_icon:
-        for key, icon in PLATFORM_ICONS.items():
-            if platform_slug.startswith(key):
-                platform_icon = icon
-                break
-
-    # --- Final fallback ---
-    if not platform_icon:
-        platform_icon = "pc.svg"
-
-    # GENRE ICON LOGIC
-    genre_slug = game.genre.slug.lower()
-
-    GENRE_ICONS = {
-        "action": "action.svg",
-        "adventure": "adventure.svg",
-        "rpg": "rpg.svg",
-        "shooter": "shooter.svg",
-    }
-
-    genre_icon = GENRE_ICONS.get(genre_slug, "action.svg")
-
     return render(request, "products/product_detail.html", {
         "game": game,
-        "platform_icon": platform_icon,
-        "genre_icon": genre_icon,
     })
 
 def platform_list(request):
@@ -178,15 +95,27 @@ def genre_detail(request, slug):
     return redirect(f"{reverse('product_list')}?genre={genre.slug}")
 
 
+from django.db.models import Count
+
 def categories(request):
-    platforms = Platform.objects.annotate(game_count=Count('game'))
-    genres = Genre.objects.annotate(game_count=Count('game'))
+    platforms = (
+        Platform.objects
+        .annotate(game_count=Count('game'))
+        .filter(game_count__gt=0)
+        .order_by('name')
+    )
+
+    genres = (
+        Genre.objects
+        .annotate(game_count=Count('game'))
+        .filter(game_count__gt=0)
+        .order_by('name')
+    )
 
     return render(request, 'products/categories.html', {
         'platforms': platforms,
         'genres': genres,
     })
-
 
 def register(request):
     if request.method == "POST":
