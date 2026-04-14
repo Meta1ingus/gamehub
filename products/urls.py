@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import create_checkout_session_view
 
 urlpatterns = [
     path('register/', views.register, name='register'),
@@ -15,5 +16,7 @@ urlpatterns = [
     path('genres/<slug:slug>/', views.genre_detail, name='genre_detail'),
 
     path('<slug:slug>/', views.product_detail, name='product_detail'),
+
+     path("buy/<slug:slug>/", create_checkout_session_view, name="create_checkout_session"),
 
 ]

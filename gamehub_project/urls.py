@@ -16,4 +16,7 @@ urlpatterns = [
     
     # Cart URLs
     path('cart/', include('cart.urls')),
+
+    # Checkout URLs
+    path("checkout/", include("checkout.urls")),
 ]

@@ -7,7 +7,7 @@ from .cart import Cart
 from django.db.models import Q, Count
 from django.contrib import messages
 from django.urls import reverse
-
+from core.stripe_service import create_checkout_session
 
 def product_list(request):
     games = Game.objects.all()
@@ -128,3 +128,9 @@ def register(request):
         form = UserCreationForm()
 
     return render(request, 'registration/register.html', {'form': form})
+
+@require_POST
+def create_checkout_session_view(request, slug):
+    game = get_object_or_404(Game, slug=slug)
+    session = create_checkout_session(game)
+    return redirect(session.url)

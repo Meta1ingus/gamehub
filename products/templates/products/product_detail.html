@@ -50,6 +50,15 @@
         <div class="gamerbay-pricebox p-4 rounded mb-4">
             <h3 class="mb-3 text-white">{{ game.price|currency }}</h3>
 
+            <!-- BUY NOW (Stripe Checkout) -->
+            <form action="{% url 'create_checkout_session' game.slug %}" method="post" class="mb-2">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-lg w-100">
+                    Buy Now
+                </button>
+            </form>
+
+            <!-- ADD TO CART -->
             <form action="{% url 'cart_add' game.id %}" method="post">
                 {% csrf_token %}
                 <button class="btn btn-primary btn-lg w-100">
@@ -57,6 +66,7 @@
                 </button>
             </form>
         </div>
+
 
         <!-- DESCRIPTION -->
         <div class="gamerbay-section mt-4">
