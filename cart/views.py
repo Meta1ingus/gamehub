@@ -4,6 +4,12 @@ from products.models import Game
 from products.cart import Cart as SessionCart
 from .models import Cart, CartItem
 
+# IMPORTS FOR STRIPE CHECKOUT
+from core.stripe_service import (
+    build_line_items_from_cart,
+    create_checkout_session_cart,
+)
+
 
 def cart_detail(request):
     if request.user.is_authenticated:
@@ -95,3 +101,23 @@ def cart_clear(request):
         cart.clear()
 
     return redirect('cart_detail')
+
+
+# MULTI‑ITEM CHECKOUT VIEW
+@require_POST
+def cart_checkout(request):
+    # Logged-in users → DB cart
+    if request.user.is_authenticated:
+        cart = request.user.cart
+        cart_items = cart.items.all()
+    else:
+        session_cart = SessionCart(request)
+        cart_items = list(session_cart)
+
+    # Convert cart items → Stripe line items
+    line_items = build_line_items_from_cart(cart_items)
+
+    # Create Stripe session
+    session = create_checkout_session_cart(line_items)
+
+    return redirect(session.url)

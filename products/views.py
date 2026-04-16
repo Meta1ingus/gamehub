@@ -134,3 +134,23 @@ def create_checkout_session_view(request, slug):
     game = get_object_or_404(Game, slug=slug)
     session = create_checkout_session(game)
     return redirect(session.url)
+
+@require_POST
+def cart_checkout(request):
+    # Logged-in users → DB cart
+    if request.user.is_authenticated:
+        cart = request.user.cart
+        cart_items = cart.items.all()
+
+    # Guests → Session cart
+    else:
+        session_cart = SessionCart(request)
+        cart_items = list(session_cart)
+
+    # Convert cart items → Stripe line items
+    line_items = build_line_items_from_cart(cart_items)
+
+    # Create Stripe session
+    session = create_checkout_session_cart(line_items)
+
+    return redirect(session.url)
