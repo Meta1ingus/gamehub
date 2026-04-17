@@ -3,6 +3,21 @@ from django.conf import settings
 from .models import Game
 
 
+class SessionCartItem:
+    """
+    A lightweight object representing a single item in the session cart.
+    Matches the interface of OrderItem so checkout logic works consistently.
+    """
+    def __init__(self, game, price, quantity):
+        self.game = game
+        self.price = price
+        self.quantity = quantity
+
+    @property
+    def total_price(self):
+        return self.price * self.quantity
+
+
 class Cart:
     def __init__(self, request):
         self.session = request.session
@@ -40,22 +55,28 @@ class Cart:
             self.save()
 
     def __iter__(self):
+        """
+        Yield CartItem objects instead of dicts.
+        This makes the session cart compatible with OrderItem.
+        """
         game_ids = self.cart.keys()
         games = Game.objects.filter(id__in=game_ids)
 
-        cart = self.cart.copy()
         for game in games:
-            item = cart[str(game.id)]
-            item['game'] = game
-            item['price'] = Decimal(item['price'])
-            item['total_price'] = item['price'] * item['quantity']
-            yield item
+            item = self.cart[str(game.id)]
+            price = Decimal(item['price'])
+            quantity = item['quantity']
+
+            yield SessionCartItem(
+                game=game,
+                price=price,
+                quantity=quantity
+            )
 
     def __len__(self):
         return sum(item['quantity'] for item in self.cart.values())
 
     def get_total_price(self):
-        from decimal import Decimal
         return sum(
             Decimal(item['price']) * item['quantity']
             for item in self.cart.values()

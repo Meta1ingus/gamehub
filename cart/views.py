@@ -3,6 +3,7 @@ from django.views.decorators.http import require_POST
 from products.models import Game
 from products.cart import Cart as SessionCart
 from .models import Cart, CartItem
+from orders.models import Order, OrderItem
 
 # IMPORTS FOR STRIPE CHECKOUT
 from core.stripe_service import (
@@ -106,7 +107,7 @@ def cart_clear(request):
 # MULTI‑ITEM CHECKOUT VIEW
 @require_POST
 def cart_checkout(request):
-    # Logged-in users → DB cart
+    # 1. Get cart items (DB or session)
     if request.user.is_authenticated:
         cart = request.user.cart
         cart_items = cart.items.all()
@@ -114,10 +115,34 @@ def cart_checkout(request):
         session_cart = SessionCart(request)
         cart_items = list(session_cart)
 
-    # Convert cart items → Stripe line items
+    # 2. Calculate total
+    total_amount = sum(item.total_price for item in cart_items)
+
+    # 3. Create the Order (unpaid for now)
+    order = Order.objects.create(
+        user=request.user if request.user.is_authenticated else None,
+        total_amount=total_amount,
+        is_paid=False,
+    )
+
+    # 4. Create OrderItems
+    for item in cart_items:
+        OrderItem.objects.create(
+            order=order,
+            game=item.game,
+            quantity=item.quantity,
+            price=item.price,
+        )
+
+    # 5. Build Stripe line items
     line_items = build_line_items_from_cart(cart_items)
 
-    # Create Stripe session
-    session = create_checkout_session_cart(line_items)
+    # 6. Create Stripe session (NOW passing order)
+    session = create_checkout_session_cart(line_items, order)
 
+    # 7. Save Stripe session ID to the order
+    order.stripe_session_id = session.id
+    order.save()
+
+    # 8. Redirect to Stripe
     return redirect(session.url)

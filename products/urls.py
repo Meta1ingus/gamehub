@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from .views import create_checkout_session_view
 
@@ -17,6 +17,8 @@ urlpatterns = [
 
     path('<slug:slug>/', views.product_detail, name='product_detail'),
 
-     path("buy/<slug:slug>/", create_checkout_session_view, name="create_checkout_session"),
+    path("buy/<slug:slug>/", create_checkout_session_view, name="create_checkout_session"),
+
+    path("orders/", include("orders.urls")),
 
 ]
