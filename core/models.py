@@ -1,3 +1,7 @@
 from django.db import models
 
-# Create your models here.
+class IGDBAdminEntry(models.Model):
+    class Meta:
+        verbose_name = "IGDB Search"
+        verbose_name_plural = "IGDB Search"
+        managed = False  # No database table

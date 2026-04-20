@@ -1,0 +1,111 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<h1>IGDB Game Importer</h1>
+
+<form method="get" action="{% url 'admin:igdb_search' %}">
+    <input type="text" name="q" placeholder="Search IGDB…" style="width: 300px;">
+    <button type="submit" class="button">Search</button>
+</form>
+
+{% if results %}
+<h2>Results</h2>
+<table class="adminlist">
+    <thead>
+        <tr>
+            <th>Cover</th>
+            <th>Name</th>
+            <th>Import</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for game in results %}
+        <tr>
+            <td>
+                {% if game.cover %}
+                <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/{{ game.cover.image_id }}.jpg"
+                    style="height: 80px;">
+                {% endif %}
+            </td>
+            <td>{{ game.name }}</td>
+            <td>
+                <button class="button igdb-import" data-id="{{ game.id }}">Import</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+<div id="platformModal" style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.5);
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+">
+    <div style="
+        background:#ffffff;
+        color:#000000;
+        padding:20px;
+        border-radius:6px;
+        width:300px;
+        position:relative;
+    ">
+        <button type="button" id="closeModal" class="button" style="position:absolute; top:10px; right:10px;">X</button>
+
+        <h3>Select Platform</h3>
+
+        <form id="platformForm" method="post" action="">
+            {% csrf_token %}
+            <select name="platform" id="platformSelect" style="
+                width:100%;
+                margin-bottom:15px;
+                background:#ffffff;
+                color:#000000;
+            ">
+                {% for p in platforms %}
+                <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="button default">Import Game</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("platformModal");
+        const form = document.getElementById("platformForm");
+
+        document.querySelectorAll(".igdb-import").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const igdbId = this.dataset.id;
+
+                // Set form action to your existing import URL
+                form.action = `/admin/core/igdbadminentry/import/${igdbId}/`;
+
+                // Show modal
+                modal.style.display = "flex";
+            });
+        });
+    });
+    // Close button
+    document.getElementById("closeModal").addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    // Click outside modal to close
+    modal.addEventListener("click", function (e) {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+</script>
+
+{% endblock %}

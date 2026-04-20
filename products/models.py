@@ -45,9 +45,9 @@ class Genre(models.Model):
 class Game(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
-    price = models.DecimalField(max_digits=6, decimal_places=2)
-    platform = models.ForeignKey(Platform, on_delete=models.CASCADE)
-    genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    platform = models.ForeignKey(Platform, on_delete=models.SET_NULL, null=True, blank=True)
+    genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='game_images/', blank=True)
     hero_image = models.ImageField(upload_to='hero_images/', blank=True, null=True)
@@ -61,3 +61,10 @@ class Game(models.Model):
 
     def __str__(self):
         return self.title
+    
+class GenreMapping(models.Model):
+    igdb_name = models.CharField(max_length=255, unique=True)
+    local_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.igdb_name} → {self.local_name}"
