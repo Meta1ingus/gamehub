@@ -42,7 +42,7 @@ class IGDBAdmin(admin.ModelAdmin):
             """
 
             results = client.query("games", igdb_query)
-            print("IGDB RESULTS:", results)   # ⭐ ADD THIS
+            print("IGDB RESULTS:", results)
 
         return render(request, "admin/igdb_search.html", {"results": results, "platforms": Platform.objects.all(),})
 

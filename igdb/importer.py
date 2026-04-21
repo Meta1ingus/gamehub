@@ -8,7 +8,8 @@ from igdb.client import IGDBClient
 
 
 class IGDBImporter:
-    IMAGE_BASE = "https://images.igdb.com/igdb/image/upload/t_1080p/"
+    # Use the correct IGDB cover size
+    IMAGE_BASE = "https://images.igdb.com/igdb/image/upload/t_cover_big/"
 
     # Hardcoded fallback mappings (minimal)
     GENRE_MAP = {
@@ -24,7 +25,7 @@ class IGDBImporter:
         Platform is intentionally NOT assigned — you choose it manually.
         """
         query = f"""
-            fields name, summary, genres, cover.image_id, screenshots.image_id;
+            fields name, summary, genres, cover.image_id;
             where id = {igdb_id};
         """
 
@@ -54,15 +55,10 @@ class IGDBImporter:
             if genre:
                 game.genre = genre
 
-        # Cover image
+        # Cover image ONLY
         if data.get("cover"):
             image_id = data["cover"]["image_id"]
-            self._download_image(game, image_id, field="image")
-
-        # Hero image (first screenshot)
-        if data.get("screenshots"):
-            screenshot_id = data["screenshots"][0]["image_id"]
-            self._download_image(game, screenshot_id, field="hero_image")
+            self._download_cover_image(game, image_id)
 
         game.save()
         return game
@@ -99,13 +95,13 @@ class IGDBImporter:
 
         return genre
 
-    def _download_image(self, game, image_id, field):
+    def _download_cover_image(self, game, image_id):
         """
-        Download an IGDB image and attach it to a Game model field.
+        Download a single IGDB cover image and attach it to Game.image.
         """
         url = f"{self.IMAGE_BASE}{image_id}.jpg"
         response = requests.get(url)
 
         if response.status_code == 200:
-            filename = f"{game.slug}-{field}.jpg"
-            getattr(game, field).save(filename, ContentFile(response.content), save=False)
+            filename = f"{game.slug}-cover.jpg"
+            game.image.save(filename, ContentFile(response.content), save=False)

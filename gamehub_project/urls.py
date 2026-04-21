@@ -16,4 +16,6 @@ urlpatterns = [
     path("checkout/", include("checkout.urls")),
 
     path("webhooks/stripe/", stripe_webhook, name="stripe-webhook"),
+
+    path("profile/", include("users.urls")),
 ]
