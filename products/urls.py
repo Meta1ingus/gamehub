@@ -20,5 +20,4 @@ urlpatterns = [
     path("buy/<slug:slug>/", create_checkout_session_view, name="create_checkout_session"),
 
     path("orders/", include("orders.urls")),
-
 ]

@@ -30,7 +30,18 @@ def stripe_webhook(request):
         try:
             order = Order.objects.get(stripe_session_id=session_id)
             order.mark_as_paid()
+
+            # Clear cart for logged-in users
+            if order.user:
+                if hasattr(order.user, "cart"):
+                    order.user.cart.items.all().delete()
+
+            # Clear session cart for guests
+            # (Guests have no user, so we rely on metadata)
+            # If you want guest carts cleared, add metadata later
+            # For now, logged-in clearing is enough
+
         except Order.DoesNotExist:
-            pass  # No matching order — ignore silently
+            pass
 
     return HttpResponse(status=200)

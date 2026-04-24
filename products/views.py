@@ -138,7 +138,30 @@ def register(request):
 @require_POST
 def create_checkout_session_view(request, slug):
     game = get_object_or_404(Game, slug=slug)
-    session = create_checkout_session(game)
+
+    # 1. Create the Order
+    order = Order.objects.create(
+        user=request.user if request.user.is_authenticated else None,
+        total_amount=game.price,
+        is_paid=False,
+    )
+
+    # 2. Create the OrderItem
+    OrderItem.objects.create(
+        order=order,
+        game=game,
+        quantity=1,
+        price=game.price,
+    )
+
+    # 3. Create Stripe session (passing the order)
+    session = create_checkout_session(game, order)
+
+    # 4. Save session ID
+    order.stripe_session_id = session.id
+    order.save()
+
+    # 5. Redirect to Stripe
     return redirect(session.url)
 
 @require_POST
@@ -147,16 +170,39 @@ def cart_checkout(request):
     if request.user.is_authenticated:
         cart = request.user.cart
         cart_items = cart.items.all()
-
-    # Guests → Session cart
     else:
         session_cart = SessionCart(request)
         cart_items = list(session_cart)
 
-    # Convert cart items → Stripe line items
+    # 1. Calculate total
+    total = sum(item.price * item.quantity for item in cart_items)
+
+    # 2. Create the Order
+    order = Order.objects.create(
+        user=request.user if request.user.is_authenticated else None,
+        total_amount=total,
+        is_paid=False,
+    )
+
+    # 3. Create OrderItems
+    for item in cart_items:
+        OrderItem.objects.create(
+            order=order,
+            game=item.game,
+            quantity=item.quantity,
+            price=item.price,
+        )
+
+    # 4. Convert cart items → Stripe line items
     line_items = build_line_items_from_cart(cart_items)
 
-    # Create Stripe session
-    session = create_checkout_session_cart(line_items)
+    # 5. Create Stripe session (passing the order)
+    session = create_checkout_session_cart(line_items, order)
 
+    # 6. Save session ID
+    order.stripe_session_id = session.id
+    order.save()
+
+    # 7. Redirect to Stripe
     return redirect(session.url)
+

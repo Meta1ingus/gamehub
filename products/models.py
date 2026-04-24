@@ -1,17 +1,70 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils.text import slugify
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class Platform(models.Model):
+    name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(unique=True, blank=True)
-    bio = models.TextField(blank=True)
-    avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
+    
+    manufacturer = models.CharField(max_length=50)
+    manufacturer_slug = models.SlugField(blank=True)
+
+    image = models.ImageField(upload_to='platform_textures/', blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        from django.utils.text import slugify
+
+        # Existing behaviour — keep this
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        # ⭐ NEW BEHAVIOUR — auto‑generate manufacturer slug
+        if self.manufacturer and not self.manufacturer_slug:
+            self.manufacturer_slug = slugify(self.manufacturer)
+
+        super().save(*args, **kwargs)
+
+
+
+class Genre(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True, blank=True)
+    image = models.ImageField(upload_to='genre_textures/', blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.user.username)
+            from django.utils.text import slugify
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+class Game(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, blank=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    platform = models.ForeignKey(Platform, on_delete=models.SET_NULL, null=True, blank=True)
+    genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='game_images/', blank=True)
+    hero_image = models.ImageField(upload_to='hero_images/', blank=True, null=True)
+
+    featured = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.user.username
+        return self.title
+    
+class GenreMapping(models.Model):
+    igdb_name = models.CharField(max_length=255, unique=True)
+    local_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.igdb_name} → {self.local_name}"

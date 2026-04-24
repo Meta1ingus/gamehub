@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Order #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+
+        <h2 class="fw-bold mb-4">Order #{{ order.id }}</h2>
+
+        <p><strong>Date:</strong> {{ order.created_at|date:"F j, Y, g:i a" }}</p>
+
+        <p>
+            <strong>Status:</strong>
+            {% if order.is_paid %}
+                <span class="badge bg-success">Paid</span>
+            {% else %}
+                <span class="badge bg-warning text-dark">Pending</span>
+            {% endif %}
+        </p>
+
+        <p><strong>Total:</strong> £{{ order.total_amount }}</p>
+
+        <hr>
+
+        <h4 class="mb-3">Items</h4>
+
+        <ul class="list-group">
+            {% for item in order.items.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ item.game.title }}</strong><br>
+                        <small>£{{ item.price }} × {{ item.quantity }}</small>
+                    </div>
+
+                    <div>
+                        £{{ item.total_price }}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+</div>
+{% endblock %}
