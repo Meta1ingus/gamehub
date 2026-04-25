@@ -1,17 +1,11 @@
 from django.shortcuts import render
-from products.models import Game, Platform, Genre
+from products.models import Game, Platform, Genre, PlatformFamily
 from django.db.models import Count
 
 def home(request):
     games = Game.objects.filter(featured=True)
 
-    manufacturers = (
-        Platform.objects
-        .values('manufacturer', 'manufacturer_slug')
-        .annotate(game_count=Count('game'))
-        .filter(game_count__gt=0)
-        .order_by('manufacturer')
-    )
+    families = PlatformFamily.objects.all().order_by("name")
 
     genres = (
         Genre.objects
@@ -22,6 +16,6 @@ def home(request):
 
     return render(request, "core/home.html", {
         "games": games,
-        "manufacturers": manufacturers,
+        "families": families,
         "genres": genres,
     })

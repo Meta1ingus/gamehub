@@ -9,10 +9,7 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        ('products', '0006_platform_manufacturer_platform_manufacturer_slug'),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(

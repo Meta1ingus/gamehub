@@ -48,17 +48,17 @@
     </button>
 </div>
 
-<!-- Browse by Brand -->
-<h2 class="fw-bold mt-5 mb-3">Browse by Brand</h2>
+<!-- Browse by Platform Family -->
+<h2 class="fw-bold mt-5 mb-3">Browse by Platform Family</h2>
 
 <div class="row g-3">
-    {% for m in manufacturers %}
+    {% for family in families %}
     <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-        <a href="{% url 'categories' %}#{{ m.manufacturer_slug }}" class="text-decoration-none">
+        <a href="{% url 'platform_family' family.slug %}" class="text-decoration-none">
             <div class="card card-tile h-100 text-center shadow-sm p-3">
-                <img src="{% static 'core/manufacturers/' %}{{ m.manufacturer_slug }}.svg"
-                     class="img-fluid mb-2" alt="{{ m.manufacturer }}">
-                <h6 class="mb-0">{{ m.manufacturer }}</h6>
+                <img src="{% static 'core/families/' %}{{ family.slug }}.svg"
+                     class="img-fluid mb-2" alt="{{ family.name }}">
+                <h6 class="mb-0">{{ family.name }}</h6>
             </div>
         </a>
     </div>

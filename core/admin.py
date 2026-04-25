@@ -47,14 +47,31 @@ class IGDBAdmin(admin.ModelAdmin):
         return render(request, "admin/igdb_search.html", {"results": results, "platforms": Platform.objects.all(),})
 
     def import_view(self, request, igdb_id):
+        """
+        Import a game by ID and assign platform.
+        """
         importer = IGDBImporter()
 
-        try:
-            game = importer.import_game(igdb_id)
-            messages.success(request, f"Imported: {game.title}")
-        except Exception as e:
-            messages.error(request, f"Import failed: {e}")
+        if request.method == "POST":
+            platform_id = request.POST.get("platform")
 
+            try:
+                game = importer.import_game(igdb_id)
+
+                if platform_id:
+                    from products.models import Platform
+                    platform = Platform.objects.get(id=platform_id)
+                    game.platform = platform
+                    game.save()
+
+                messages.success(request, f"Imported: {game.title} (Platform: {platform.name})")
+
+            except Exception as e:
+                messages.error(request, f"Import failed: {e}")
+
+            return redirect("admin:igdb_search")
+
+        # If someone GETs this URL, redirect back
         return redirect("admin:igdb_search")
 
 # Customise admin header

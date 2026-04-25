@@ -1,26 +1,59 @@
 from django.contrib import admin
-from .models import Game, Platform, Genre
+from .models import Game, Platform, Genre, PlatformFamily
 
-admin.site.register(Game)
+# GAME ADMIN
+
+@admin.register(Game)
+class GameAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "platform",
+        "price",
+        "is_used",
+        "is_digital",
+        "featured",
+        "stock",
+    )
+
+    list_display_links = ("title",)
+
+    list_editable = (
+        "price",
+        "is_used",
+        "is_digital",
+        "featured",
+        "stock",
+    )
+
+    ordering = ("title",)
+
+    search_fields = ("title",)
+    list_filter = ("platform", "is_used", "is_digital", "featured")
+
+# GENRE ADMIN
+
 admin.site.register(Genre)
+
+# PLATFORM ADMIN
 
 @admin.register(Platform)
 class PlatformAdmin(admin.ModelAdmin):
-    # Slugs should never be edited manually
-    readonly_fields = ('slug', 'manufacturer_slug')
+    readonly_fields = ('slug',)
+    list_display = ('name', 'family', 'slug')
+    list_filter = ('family',)
+    search_fields = ('name', 'family__name')
 
-    list_display = ('name', 'manufacturer', 'slug', 'manufacturer_slug')
-    list_filter = ('manufacturer',)
-    search_fields = ('name', 'manufacturer')
-
-    # Only superusers can add platforms
     def has_add_permission(self, request):
         return request.user.is_superuser
 
-    # Only superusers can edit platforms
     def has_change_permission(self, request, obj=None):
         return request.user.is_superuser
 
-    # Only superusers can delete platforms
     def has_delete_permission(self, request, obj=None):
         return request.user.is_superuser
+
+# PLATFORM FAMILY ADMIN
+
+@admin.register(PlatformFamily)
+class PlatformFamilyAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug')

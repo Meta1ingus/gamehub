@@ -13,8 +13,16 @@ class IGDBAdminView(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
-            path("search/", self.admin_site.admin_view(self.search_view), name="igdb_search"),
-            path("import/<int:igdb_id>/", self.admin_site.admin_view(self.import_view), name="igdb_import"),
+            path(
+                "search/",
+                self.admin_site.admin_view(self.search_view),
+                name="igdb_search"
+            ),
+            path(
+                "import/<int:igdb_id>/",
+                self.admin_site.admin_view(self.import_view),
+                name="igdb_import"
+            ),
         ]
         return custom_urls + urls
 
@@ -30,7 +38,13 @@ class IGDBAdminView(admin.ModelAdmin):
 
             igdb_query = f"""
                 search "{query}";
-                fields name, cover.image_id;
+                fields
+                    name,
+                    cover.image_id,
+                    first_release_date,
+                    platforms.name,
+                    id,
+                    summary;
                 limit 20;
             """
 

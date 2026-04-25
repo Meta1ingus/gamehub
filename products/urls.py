@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.product_list, name='product_list'),
 
     path('categories/', views.categories, name='categories'),
+    path("platforms/<slug:family_slug>/", views.platform_family, name="platform_family"),
 
     path('platforms/', views.platform_list, name='platform_list'),
     path('platforms/<slug:slug>/', views.platform_detail, name='platform_detail'),

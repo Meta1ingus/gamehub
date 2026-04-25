@@ -14,6 +14,9 @@ class IGDBImporter:
     # Hardcoded fallback mappings (minimal)
     GENRE_MAP = {
         "Role-playing (RPG)": "RPG",
+        "Hack and slash/Beat 'em up": "Action",
+        "Real Time Strategy (RTS)": "RTS",
+        "Turn-based strategy (TBS)": "Strategy",
     }
 
     def __init__(self):
@@ -25,7 +28,14 @@ class IGDBImporter:
         Platform is intentionally NOT assigned — you choose it manually.
         """
         query = f"""
-            fields name, summary, genres, cover.image_id;
+            fields
+                name,
+                summary,
+                genres,
+                cover.image_id,
+                first_release_date,
+                platforms.name,
+                id;
             where id = {igdb_id};
         """
 
@@ -39,10 +49,18 @@ class IGDBImporter:
         title = data.get("name")
         slug = slugify(title)
 
-        # Create or fetch game
-        game, created = Game.objects.get_or_create(
-            slug=slug,
-            defaults={"title": title}
+        # Always create a new game with a unique slug
+        base_slug = slugify(title)
+        unique_slug = base_slug
+        counter = 1
+
+        while Game.objects.filter(slug=unique_slug).exists():
+            unique_slug = f"{base_slug}-{counter}"
+            counter += 1
+
+        game = Game.objects.create(
+            title=title,
+            slug=unique_slug
         )
 
         # Description
@@ -60,15 +78,24 @@ class IGDBImporter:
             image_id = data["cover"]["image_id"]
             self._download_cover_image(game, image_id)
 
+        # Extra IGDB metadata (not saved to DB yet)
+        game.igdb_id = data.get("id")
+        game.igdb_release_date = data.get("first_release_date")
+        game.igdb_platforms = (
+            [p["name"] for p in data.get("platforms", [])]
+            if data.get("platforms")
+            else []
+        )
+
         game.save()
         return game
 
     def _map_genre(self, igdb_genre_id):
         """
         Map IGDB genre → Genre model using:
-        1. DB mapping (admin editable)
-        2. Hardcoded fallback map
-        3. Raw IGDB name
+        1. Hardcoded fallback map
+        2. Raw IGDB name
+            If neither exists, returns None (genre not assigned).
         """
         query = f"fields name; where id = {igdb_genre_id};"
         result = self.client.query("genres", query)
@@ -78,13 +105,8 @@ class IGDBImporter:
 
         igdb_name = result[0]["name"]
 
-        # 1) DB mapping first
-        mapping = GenreMapping.objects.filter(igdb_name=igdb_name).first()
-        if mapping:
-            local_name = mapping.local_name
-        else:
-            # 2) Hardcoded fallback
-            local_name = self.GENRE_MAP.get(igdb_name, igdb_name)
+        # Hardcoded fallback
+        local_name = self.GENRE_MAP.get(igdb_name, igdb_name)
 
         slug = slugify(local_name)
 
@@ -94,6 +116,7 @@ class IGDBImporter:
         )
 
         return genre
+
 
     def _download_cover_image(self, game, image_id):
         """

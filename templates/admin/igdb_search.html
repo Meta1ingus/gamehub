@@ -11,24 +11,57 @@
 
 {% if results %}
 <h2>Results</h2>
+
 <table class="adminlist">
     <thead>
         <tr>
             <th>Cover</th>
             <th>Name</th>
+            <th>Release Date</th>
+            <th>Platforms</th>
+            <th>IGDB ID</th>
             <th>Import</th>
         </tr>
     </thead>
+
     <tbody>
         {% for game in results %}
         <tr>
+            <!-- Cover -->
             <td>
                 {% if game.cover %}
-                <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/{{ game.cover.image_id }}.jpg"
-                    style="height: 80px;">
+                    <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/{{ game.cover.image_id }}.jpg"
+                         style="height: 80px;">
+                {% else %}
+                    —
                 {% endif %}
             </td>
+
+            <!-- Name -->
             <td>{{ game.name }}</td>
+
+            <!-- Release Date -->
+            <td>
+                {% if game.first_release_date %}
+                    {{ game.first_release_date|date:"Y-m-d" }}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+
+            <!-- Platforms -->
+            <td>
+                {% if game.platforms %}
+                    {{ game.platforms|join:", " }}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+
+            <!-- IGDB ID -->
+            <td>{{ game.id }}</td>
+
+            <!-- Import Button -->
             <td>
                 <button class="button igdb-import" data-id="{{ game.id }}">Import</button>
             </td>
@@ -38,6 +71,7 @@
 </table>
 {% endif %}
 
+<!-- Platform Selection Modal -->
 <div id="platformModal" style="
     display:none;
     position:fixed;
@@ -77,7 +111,6 @@
     </div>
 </div>
 
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const modal = document.getElementById("platformModal");
@@ -94,17 +127,18 @@
                 modal.style.display = "flex";
             });
         });
-    });
-    // Close button
-    document.getElementById("closeModal").addEventListener("click", function () {
-        modal.style.display = "none";
-    });
 
-    // Click outside modal to close
-    modal.addEventListener("click", function (e) {
-        if (e.target === modal) {
+        // Close button
+        document.getElementById("closeModal").addEventListener("click", function () {
             modal.style.display = "none";
-        }
+        });
+
+        // Click outside modal to close
+        modal.addEventListener("click", function (e) {
+            if (e.target === modal) {
+                modal.style.display = "none";
+            }
+        });
     });
 </script>
 

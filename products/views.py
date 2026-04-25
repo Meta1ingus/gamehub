@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Game, Platform, Genre
+from .models import Game, Platform, Genre, PlatformFamily
 from django.core.paginator import Paginator
 from django.contrib.auth.forms import UserCreationForm
 from django.views.decorators.http import require_POST
@@ -84,6 +84,19 @@ def platform_detail(request, slug):
     platform = get_object_or_404(Platform, slug=slug)
     return redirect(f"{reverse('product_list')}?platform={platform.slug}")
 
+def platform_family(request, family_slug):
+    family = get_object_or_404(PlatformFamily, slug=family_slug)
+
+    platforms = (
+        family.platforms
+        .annotate(game_count=Count("game"))
+        .order_by("name")
+    )
+
+    return render(request, "products/platform_family.html", {
+        "family": family,
+        "platforms": platforms,
+    })
 
 def genre_list(request):
     genres = Genre.objects.all()
