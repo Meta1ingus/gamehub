@@ -63,6 +63,7 @@ class Game(models.Model):
     featured = models.BooleanField(default=False)
     is_used = models.BooleanField(default=False)      # False = New, True = Used
     is_digital = models.BooleanField(default=False)   # False = Physical, True = Digital
+    storefront_url = models.URLField(blank=True, null=True)
 
     stock = models.PositiveIntegerField(default=0)
 

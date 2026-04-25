@@ -2,7 +2,6 @@ from decimal import Decimal
 from django.conf import settings
 from .models import Game
 
-
 class SessionCartItem:
     """
     A lightweight object representing a single item in the session cart.
@@ -17,7 +16,6 @@ class SessionCartItem:
     def total_price(self):
         return self.price * self.quantity
 
-
 class Cart:
     def __init__(self, request):
         self.session = request.session
@@ -31,16 +29,28 @@ class Cart:
     def add(self, game, quantity=1, override_quantity=False):
         game_id = str(game.id)
 
-        if game_id not in self.cart:
-            self.cart[game_id] = {
-                'quantity': 0,
-                'price': str(game.price),
-            }
+        # Get current quantity in cart (0 if not present)
+        current_qty = self.cart.get(game_id, {}).get('quantity', 0)
 
-        if override_quantity:
-            self.cart[game_id]['quantity'] = quantity
+        # DIGITAL ITEMS IGNORE STOCK
+        if game.is_digital:
+            if override_quantity:
+                new_qty = quantity
+            else:
+                new_qty = current_qty + quantity
+
         else:
-            self.cart[game_id]['quantity'] += quantity
+            # PHYSICAL ITEMS MUST RESPECT STOCK
+            if override_quantity:
+                new_qty = min(quantity, game.stock)
+            else:
+                new_qty = min(current_qty + quantity, game.stock)
+
+        # Save back to session cart
+        self.cart[game_id] = {
+            'quantity': new_qty,
+            'price': str(game.price),
+        }
 
         self.save()
 

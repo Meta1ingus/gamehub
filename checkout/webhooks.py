@@ -18,6 +18,7 @@ def stripe_webhook(request):
     except Exception:
         return HttpResponse(status=400)
 
+    # Make sure everything below is indented under this IF
     if event["type"] == "checkout.session.completed":
         session = event["data"]["object"]
 
@@ -29,8 +30,26 @@ def stripe_webhook(request):
             from orders.models import Order
             try:
                 order = Order.objects.get(id=order_id)
+
+                # Mark order as paid
                 order.is_paid = True
                 order.save()
+
+                # DECREMENT STOCK FOR PHYSICAL ITEMS
+                for item in order.items.all():
+                    game = item.game
+
+                    # DIGITAL ITEMS DO NOT DECREMENT STOCK
+                    if game.is_digital:
+                        continue
+
+                    # PHYSICAL ITEMS: REDUCE STOCK
+                    game.stock -= item.quantity
+                    if game.stock < 0:
+                        game.stock = 0
+
+                    game.save()
+
             except Exception as e:
                 print("WEBHOOK ERROR:", e)
 

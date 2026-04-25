@@ -11,7 +11,6 @@ from core.stripe_service import (
     create_checkout_session_cart,
 )
 
-
 def cart_detail(request):
     if request.user.is_authenticated:
         try:
@@ -36,7 +35,6 @@ def cart_detail(request):
     }
     return render(request, 'products/cart_detail.html', context)
 
-
 @require_POST
 def cart_add(request, game_id):
     game = get_object_or_404(Game, id=game_id)
@@ -48,15 +46,20 @@ def cart_add(request, game_id):
             game=game,
             defaults={'quantity': 1, 'price': game.price}
         )
+
+        # ⭐ STOCK‑AWARE LOGIC
         if not created:
-            item.quantity += 1
+            if game.is_digital:
+                item.quantity += 1
+            else:
+                item.quantity = min(item.quantity + 1, game.stock)
             item.save()
+
     else:
         cart = SessionCart(request)
         cart.add(game=game, quantity=1)
 
     return redirect('product_detail', slug=game.slug)
-
 
 @require_POST
 def cart_remove(request, game_id):
@@ -71,7 +74,6 @@ def cart_remove(request, game_id):
 
     return redirect('cart_detail')
 
-
 @require_POST
 def cart_update(request, game_id):
     game = get_object_or_404(Game, id=game_id)
@@ -84,14 +86,20 @@ def cart_update(request, game_id):
             game=game,
             defaults={'quantity': quantity, 'price': game.price}
         )
-        item.quantity = quantity
+
+        # ⭐ STOCK‑AWARE LOGIC
+        if game.is_digital:
+            item.quantity = quantity
+        else:
+            item.quantity = min(quantity, game.stock)
+
         item.save()
+
     else:
         cart = SessionCart(request)
         cart.add(game=game, quantity=quantity, override_quantity=True)
 
     return redirect('cart_detail')
-
 
 @require_POST
 def cart_clear(request):
@@ -103,7 +111,6 @@ def cart_clear(request):
 
     return redirect('cart_detail')
 
-
 # MULTI‑ITEM CHECKOUT VIEW
 @require_POST
 def cart_checkout(request):
@@ -114,6 +121,17 @@ def cart_checkout(request):
     else:
         session_cart = SessionCart(request)
         cart_items = list(session_cart)
+
+    # STOCK VALIDATION BEFORE CHECKOUT
+    from django.contrib import messages
+    for item in cart_items:
+        game = item.game
+
+        # DIGITAL ITEMS IGNORE STOCK
+        if not game.is_digital:
+            if item.quantity > game.stock:
+                messages.error(request, f"Not enough stock for {game.title}.")
+                return redirect("cart_detail")
 
     # 2. Calculate total
     total_amount = sum(item.total_price for item in cart_items)

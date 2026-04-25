@@ -48,8 +48,24 @@
 
         <!-- PRICE -->
         <div class="gamerbay-pricebox p-4 rounded mb-4">
+
+            {% if game.price == 0 %}
+            <!-- F2P -->
+            <h3 class="mb-3 text-white">Free</h3>
+
+            {% if game.storefront_url %}
+            <a href="{{ game.storefront_url }}" target="_blank" class="btn btn-primary btn-lg w-100">
+                Download Free
+            </a>
+            {% else %}
+            <span class="badge bg-info w-100 py-2 fs-5">Free to Play</span>
+            {% endif %}
+
+            {% else %}
+            <!-- PAID GAME -->
             <h3 class="mb-3 text-white">{{ game.price|currency }}</h3>
 
+            {% if game.stock > 0 or game.is_digital %}
             <!-- BUY NOW (Stripe Checkout) -->
             <form action="{% url 'create_checkout_session' game.slug %}" method="post" class="mb-2">
                 {% csrf_token %}
@@ -65,8 +81,13 @@
                     Add to Cart
                 </button>
             </form>
-        </div>
+            {% else %}
+            <!-- OUT OF STOCK -->
+            <span class="badge bg-danger w-100 py-2 fs-5">Out of Stock</span>
+            {% endif %}
+            {% endif %}
 
+        </div>
 
         <!-- DESCRIPTION -->
         <div class="gamerbay-section mt-4">
