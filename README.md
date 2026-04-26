@@ -1,4 +1,4 @@
-# GamerBay — A Neon‑Styled Game Storefront
+# GamerBay - A Neon‑Styled Game Storefront
 
 GamerBay is a full‑stack Django web application that allows users to browse, purchase, and manage video game products across multiple platforms. It features a custom neon‑themed UI, platform family grouping, dynamic hero‑image product pages, a shopping cart system, and secure Stripe‑powered checkout.
 
