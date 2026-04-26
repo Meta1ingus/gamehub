@@ -1,7 +1,40 @@
-<h1>Edit Profile</h1>
+{% extends "base.html" %}
+{% load form_extras %}
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+
+        <div class="gamerbay-card p-4">
+
+            <h1 class="fw-bold text-white mb-4 text-center">Edit Profile</h1>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Bio -->
+                <div class="mb-3">
+                    <label class="form-label text-light">Bio</label>
+                    {{ form.bio|add_class:"form-control gamerbay-input" }}
+                </div>
+
+                <!-- Avatar -->
+                <div class="mb-3">
+                    <label class="form-label text-light">Avatar</label>
+                    {{ form.avatar|add_class:"form-control gamerbay-input" }}
+                </div>
+
+                <button type="submit" class="btn gamerbay-btn-primary w-100 mt-3">
+                    Save Changes
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

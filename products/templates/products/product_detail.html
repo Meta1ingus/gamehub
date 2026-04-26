@@ -4,128 +4,178 @@
 
 {% block content %}
 
-<a href="{% url 'product_list' %}" class="btn btn-outline-secondary mb-3">← Back to Storefront</a>
+<div class="family-{{ game.platform.family.slug }}">
 
-<div class="row mt-4">
+    <a href="{% url 'product_list' %}" class="btn btn-outline-secondary mb-3">← Back to Storefront</a>
 
-    <div class="col-md-6">
-
-        {% if game.image %}
-        <img src="{{ game.image.url }}" class="img-fluid rounded mb-4" alt="{{ game.title }}">
-        {% else %}
-        <img src="https://via.placeholder.com/600x400?text=No+Image" class="img-fluid rounded mb-4">
+    <!-- HERO WRAPPER -->
+    <section
+        class="product-hero mb-5
+               {% if not game.hero_image %}product-hero--fallback{% endif %}"
+        {% if game.hero_image %}
+            style="--hero-url: url('{{ game.hero_image.url }}');"
         {% endif %}
+    >
+        <div class="product-hero__overlay"></div>
 
-    </div>
+        <div class="container position-relative">
+            <div class="row align-items-center">
 
-    <div class="col-md-6">
+                <!-- LEFT: COVER ART -->
+                <div class="col-md-5 mb-4 mb-md-0">
+                    <div class="product-hero__cover-wrapper">
+                        {% if game.image %}
+                            <img src="{{ game.image.url }}"
+                                 class="img-fluid product-hero__cover-img"
+                                 alt="{{ game.title }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/600x400?text=No+Image"
+                                 class="img-fluid product-hero__cover-img"
+                                 alt="No image">
+                        {% endif %}
+                    </div>
+                </div>
 
-        <div class="mb-3">
+                <!-- RIGHT: GLASS INFO PANEL -->
+                <div class="col-md-7">
+                    <div class="product-info-panel">
 
-            {% if game.featured %}
-            <span class="badge bg-warning text-dark me-2">Featured</span>
-            {% endif %}
+                        <!-- BADGES -->
+                        <div class="product-info-panel__badges mb-3">
 
-            <span class="badge bg-dark text-uppercase gamerbay-pill me-1 d-inline-flex align-items-center">
-                <img src="{% static 'core/platforms/' %}{{ game.platform.slug }}.svg" class="gamerbay-icon me-1"
-                    alt="{{ game.platform.name }} icon">
-                {{ game.platform }}
-            </span>
+                            {% if game.featured %}
+                                <span class="badge gamerbay-badge-featured me-2">Featured</span>
+                            {% endif %}
 
-            <span class="badge bg-secondary text-uppercase gamerbay-pill d-inline-flex align-items-center">
-                <img src="{% static 'core/genres/' %}{{ game.genre.slug }}.svg" class="gamerbay-icon me-1"
-                    alt="{{ game.genre.name }} icon">
-                {{ game.genre }}
-            </span>
+                            <span class="badge gamerbay-badge-platform me-2 d-inline-flex align-items-center">
+                                <img src="{% static 'core/platforms/' %}{{ game.platform.slug }}.svg"
+                                     class="gamerbay-icon me-1"
+                                     alt="{{ game.platform.name }} icon">
+                                {{ game.platform }}
+                            </span>
 
+                            <span class="badge gamerbay-badge-genre d-inline-flex align-items-center">
+                                <img src="{% static 'core/genres/' %}{{ game.genre.slug }}.svg"
+                                     class="gamerbay-icon me-1"
+                                     alt="{{ game.genre.name }} icon">
+                                {{ game.genre }}
+                            </span>
+
+                        </div>
+
+                        <!-- TITLE + META -->
+                        <h1 class="product-info-panel__title mb-2">
+                            {{ game.title }}
+                        </h1>
+
+                        <p class="product-info-panel__meta mb-3">
+                            {{ game.platform }} • {{ game.genre }}
+                        </p>
+
+                        <!-- PRICE BOX -->
+                        <div class="product-pricebox mb-4">
+
+                            {% if game.price == 0 %}
+                                <!-- FREE‑TO‑PLAY -->
+                                <h3 class="product-pricebox__price mb-3">Free</h3>
+
+                                {% if game.storefront_url %}
+                                    <a href="{{ game.storefront_url }}"
+                                       target="_blank"
+                                       class="btn gamerbay-btn-primary btn-lg w-100">
+                                        Download Free
+                                    </a>
+                                {% else %}
+                                    <span class="badge gamerbay-badge-info w-100 py-2 fs-5">
+                                        Free to Play
+                                    </span>
+                                {% endif %}
+
+                            {% else %}
+                                <!-- PAID GAME -->
+                                <h3 class="product-pricebox__price mb-3">
+                                    {{ game.price|currency }}
+                                </h3>
+
+                                {% if game.stock > 0 or game.is_digital %}
+                                    <!-- BUY NOW (Stripe Checkout) -->
+                                    <form action="{% url 'create_checkout_session' game.slug %}"
+                                          method="post"
+                                          class="mb-2">
+                                        {% csrf_token %}
+                                        <button type="submit"
+                                                class="btn gamerbay-btn-accent btn-lg w-100">
+                                            Buy Now
+                                        </button>
+                                    </form>
+
+                                    <!-- ADD TO CART -->
+                                    <form action="{% url 'cart_add' game.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button class="btn gamerbay-btn-primary btn-lg w-100">
+                                            Add to Cart
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <!-- OUT OF STOCK -->
+                                    <span class="badge gamerbay-badge-danger w-100 py-2 fs-5">
+                                        Out of Stock
+                                    </span>
+                                {% endif %}
+                            {% endif %}
+
+                        </div>
+
+                        <!-- DESCRIPTION -->
+                        <div class="product-section mt-3">
+                            <h4 class="product-section__title">Game Overview</h4>
+                            <p class="product-section__body">
+                                {{ game.description }}
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
         </div>
+    </section>
 
-        <h1 class="mb-2 gamerbay-title">{{ game.title }}</h1>
-
-        <p class="text-muted small mb-3">
-            {{ game.platform }} • {{ game.genre }}
-        </p>
-
-        <!-- PRICE -->
-        <div class="gamerbay-pricebox p-4 rounded mb-4">
-
-            {% if game.price == 0 %}
-            <!-- F2P -->
-            <h3 class="mb-3 text-white">Free</h3>
-
-            {% if game.storefront_url %}
-            <a href="{{ game.storefront_url }}" target="_blank" class="btn btn-primary btn-lg w-100">
-                Download Free
-            </a>
-            {% else %}
-            <span class="badge bg-info w-100 py-2 fs-5">Free to Play</span>
-            {% endif %}
-
-            {% else %}
-            <!-- PAID GAME -->
-            <h3 class="mb-3 text-white">{{ game.price|currency }}</h3>
-
-            {% if game.stock > 0 or game.is_digital %}
-            <!-- BUY NOW (Stripe Checkout) -->
-            <form action="{% url 'create_checkout_session' game.slug %}" method="post" class="mb-2">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-success btn-lg w-100">
-                    Buy Now
-                </button>
-            </form>
-
-            <!-- ADD TO CART -->
-            <form action="{% url 'cart_add' game.id %}" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary btn-lg w-100">
-                    Add to Cart
-                </button>
-            </form>
-            {% else %}
-            <!-- OUT OF STOCK -->
-            <span class="badge bg-danger w-100 py-2 fs-5">Out of Stock</span>
-            {% endif %}
-            {% endif %}
-
-        </div>
-
-        <!-- DESCRIPTION -->
-        <div class="gamerbay-section mt-4">
-            <h4 class="gamerbay-section-title">Game Overview</h4>
-            <p class="text-light">
-                {{ game.description }}
-            </p>
-        </div>
-
-        {% if related_games %}
-        <div class="gamerbay-section mt-4">
-            <h4 class="gamerbay-section-title">You May Also Like</h4>
+    <!-- RELATED (unchanged, just wrapped in container) -->
+    {% if related_games %}
+    <div class="container">
+        <div class="product-section mt-4">
+            <h4 class="product-section__title">You May Also Like</h4>
 
             <div class="row">
                 {% for item in related_games %}
-                <div class="col-6 mb-3">
-                    <a href="{% url 'product_detail' item.slug %}" class="text-decoration-none">
-                        <div class="gamerbay-related-card p-2 rounded">
+                    <div class="col-6 col-md-3 mb-3">
+                        <a href="{% url 'product_detail' item.slug %}" class="text-decoration-none">
+                            <div class="gamerbay-related-card p-2 rounded">
 
-                            {% if item.image %}
-                            <img src="{{ item.image.url }}" class="img-fluid rounded mb-2" alt="{{ item.title }}">
-                            {% else %}
-                            <img src="https://via.placeholder.com/300x200?text=No+Image" class="img-fluid rounded mb-2">
-                            {% endif %}
+                                {% if item.image %}
+                                    <img src="{{ item.image.url }}"
+                                         class="img-fluid rounded mb-2"
+                                         alt="{{ item.title }}">
+                                {% else %}
+                                    <img src="https://via.placeholder.com/300x200?text=No+Image"
+                                         class="img-fluid rounded mb-2"
+                                         alt="No image">
+                                {% endif %}
 
-                            <p class="text-light small mb-1">{{ item.title }}</p>
-                            <p class="text-success small">{{ item.price|currency }}</p>
+                                <p class="text-light small mb-1">{{ item.title }}</p>
+                                <p class="text-success small">{{ item.price|currency }}</p>
 
-                        </div>
-                    </a>
-                </div>
+                            </div>
+                        </a>
+                    </div>
                 {% endfor %}
             </div>
 
         </div>
-        {% endif %}
-
     </div>
+    {% endif %}
+
 </div>
 
 {% endblock %}

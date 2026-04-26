@@ -34,10 +34,8 @@
     <div class="col-md-3">
         <select name="sort" class="form-select" onchange="this.form.submit()">
             <option value="">Sorting…</option>
-            <option value="price_asc" {% if current_sort == 'price_asc' %}selected{% endif %}>Price: Low to High
-            </option>
-            <option value="price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Price: High to Low
-            </option>
+            <option value="price_asc" {% if current_sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
             <option value="title_asc" {% if current_sort == 'title_asc' %}selected{% endif %}>Title: A → Z</option>
             <option value="title_desc" {% if current_sort == 'title_desc' %}selected{% endif %}>Title: Z → A</option>
         </select>
@@ -59,12 +57,16 @@
 <div class="row">
     {% for game in games %}
     <div class="col-md-4 mb-4">
-        <div class="card card-product shadow-sm h-100">
 
-            {% if game.image %}
-            <img src="{{ game.image.url }}" class="card-img-top" alt="{{ game.title }}">
+        <!-- PER-CARD FAMILY COLOURING + SVG GLOW -->
+        <div class="card gamerbay-card card-product h-100 family-{{ game.platform.family.slug }}">
+
+            {% if game.banner %}
+            <img src="{{ game.banner.url }}" class="product-thumb" alt="{{ game.title }}">
+            {% elif game.image %}
+            <img src="{{ game.image.url }}" class="product-thumb" alt="{{ game.title }}">
             {% else %}
-            <img src="https://via.placeholder.com/300x200?text=No+Image" class="card-img-top">
+            <img src="https://via.placeholder.com/300x200?text=No+Image" class="product-thumb">
             {% endif %}
 
             <div class="card-body">
@@ -74,13 +76,17 @@
                     </a>
                 </h5>
 
+                <!-- PLATFORM BADGE (SVG icon gets glow via CSS) -->
                 {% include 'products/components/platform_badge.html' with platform=game.platform %}
 
-                <p class="fw-bold">{{ game.price|currency }}</p>
+                {% if game.price == 0 %}
+                <p class="fw-bold text-info">Free</p>
+                {% else %}
+                <p class="price">{{ game.price|currency }}</p>
+                {% endif %}
             </div>
-
-
         </div>
+
     </div>
     {% endfor %}
 </div>

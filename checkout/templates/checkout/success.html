@@ -1,9 +1,27 @@
 {% extends "base.html" %}
 
+{% block title %}Payment Successful{% endblock %}
+
 {% block content %}
-<div class="text-center mt-5">
-    <h1 class="text-success">Payment Successful</h1>
-    <p class="text-light">Thank you for your purchase!</p>
-    <a href="/" class="btn btn-primary mt-3">Return to Store</a>
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+
+        <div class="gamerbay-card p-5 text-center">
+
+            <h1 class="fw-bold mb-3 text-white">Payment Successful</h1>
+
+            <p class="text-light mb-4">
+                Thank you for your purchase!
+            </p>
+
+            <a href="/" class="btn gamerbay-btn-primary w-100">
+                Return to Store
+            </a>
+
+        </div>
+
+    </div>
 </div>
+
 {% endblock %}

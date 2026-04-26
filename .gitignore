@@ -18,7 +18,10 @@ db.sqlite3
 staticfiles/
 static_root/
 
-# User-uploaded media
+# Local utility scripts
+scripts/
+
+# Media uploads
 media/
 
 # Environment variables / secrets

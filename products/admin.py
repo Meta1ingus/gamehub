@@ -5,6 +5,8 @@ from .models import Game, Platform, Genre, PlatformFamily
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
+    actions = ["fetch_banners_from_igdb", "find_igdb_ids"]
+
     list_display = (
         "title",
         "platform",
@@ -13,6 +15,7 @@ class GameAdmin(admin.ModelAdmin):
         "is_digital",
         "featured",
         "stock",
+        "storefront_url",
     )
 
     list_display_links = ("title",)
@@ -29,6 +32,100 @@ class GameAdmin(admin.ModelAdmin):
 
     search_fields = ("title",)
     list_filter = ("platform", "is_used", "is_digital", "featured")
+
+    # To allow storefront_url to appear in the admin form
+    fields = (
+        "title",
+        "slug",
+        "platform",
+        "genre",
+        "description",
+        "image",
+        "hero_image",
+        "price",
+        "is_used",
+        "is_digital",
+        "stock",
+        "featured",
+        "storefront_url",
+        "igdb_id",
+    )
+
+    def fetch_banners_from_igdb(self, request, queryset):
+        from igdb.importer import IGDBImporter
+
+        importer = IGDBImporter()
+
+        updated = 0
+        skipped = 0
+
+        for game in queryset:
+            # Must have IGDB ID to fetch data
+            if not hasattr(game, "igdb_id") or not game.igdb_id:
+                skipped += 1
+                continue
+
+            data = importer._fetch_game_data(game.igdb_id)
+
+            if not data:
+                skipped += 1
+                continue
+
+            # Artwork → Screenshot fallback
+            banner_id = None
+            if data.get("artworks"):
+                banner_id = data["artworks"][0]["image_id"]
+            elif data.get("screenshots"):
+                banner_id = data["screenshots"][0]["image_id"]
+
+            if banner_id:
+                importer._download_banner_image(game, banner_id)
+                updated += 1
+            else:
+                skipped += 1
+
+        self.message_user(
+            request,
+            f"Banners updated: {updated}. Skipped: {skipped}."
+        )
+
+    fetch_banners_from_igdb.short_description = "Fetch banners from IGDB"
+
+    def find_igdb_ids(self, request, queryset):
+        from igdb.client import IGDBClient
+
+        client = IGDBClient()
+
+        updated = 0
+        skipped = 0
+
+        for game in queryset:
+            # Skip if already has an ID
+            if game.igdb_id:
+                skipped += 1
+                continue
+
+            # Search IGDB by title
+            results = client.query(
+                "games",
+                f'search "{game.title}"; fields name, id; limit 5;'
+            )
+
+            if not results:
+                skipped += 1
+                continue
+
+            # Pick the first/best match
+            igdb_game = results[0]
+            game.igdb_id = igdb_game["id"]
+            game.save()
+
+            updated += 1
+
+        self.message_user(
+            request,
+            f"IGDB IDs updated: {updated}. Skipped: {skipped}."
+        )
 
 # GENRE ADMIN
 
@@ -51,6 +148,7 @@ class PlatformAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return request.user.is_superuser
+
 
 # PLATFORM FAMILY ADMIN
 

@@ -1,25 +1,58 @@
 {% extends "base.html" %}
-
+{% load form_extras %}
 {% block title %}Register{% endblock %}
 
 {% block content %}
+
 <div class="row justify-content-center mt-5">
     <div class="col-md-4">
 
-        <h2 class="fw-bold mb-4 text-center">Create Account</h2>
+        <div class="gamerbay-card p-4">
 
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
+            <h2 class="fw-bold mb-4 text-center text-white">Create Account</h2>
 
-            <button type="submit" class="btn btn-success w-100 mt-3">Register</button>
-        </form>
+            <form method="post">
+                {% csrf_token %}
 
-        <p class="text-center mt-3">
-            Already have an account?
-            <a href="{% url 'login' %}">Login</a>
-        </p>
+                <!-- Username -->
+                <div class="mb-3">
+                    <label class="form-label text-light">Username</label>
+                    {{ form.username|add_class:"form-control gamerbay-input" }}
+                </div>
+
+                <!-- Email (if included in your form) -->
+                {% if form.email %}
+                <div class="mb-3">
+                    <label class="form-label text-light">Email</label>
+                    {{ form.email|add_class:"form-control gamerbay-input" }}
+                </div>
+                {% endif %}
+
+                <!-- Password -->
+                <div class="mb-3">
+                    <label class="form-label text-light">Password</label>
+                    {{ form.password1|add_class:"form-control gamerbay-input" }}
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="mb-3">
+                    <label class="form-label text-light">Confirm Password</label>
+                    {{ form.password2|add_class:"form-control gamerbay-input" }}
+                </div>
+
+                <button type="submit" class="btn gamerbay-btn-primary w-100 mt-3">
+                    Register
+                </button>
+            </form>
+
+            <p class="text-center mt-3 text-light">
+                Already have an account?
+                <a href="{% url 'login' %}" class="gamerbay-link">Login</a>
+            </p>
+
+        </div>
 
     </div>
 </div>
+
 {% endblock %}

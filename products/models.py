@@ -57,8 +57,10 @@ class Game(models.Model):
     platform = models.ForeignKey(Platform, on_delete=models.SET_NULL, null=True, blank=True)
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='game_images/', blank=True)
+    image = models.ImageField(upload_to='game_images/', blank=True, null=True)
+    banner = models.ImageField(upload_to='game_banners/', blank=True, null=True)
     hero_image = models.ImageField(upload_to='hero_images/', blank=True, null=True)
+    igdb_id = models.IntegerField(null=True, blank=True)
 
     featured = models.BooleanField(default=False)
     is_used = models.BooleanField(default=False)      # False = New, True = Used

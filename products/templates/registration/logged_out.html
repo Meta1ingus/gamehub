@@ -3,14 +3,25 @@
 {% block title %}Logged Out{% endblock %}
 
 {% block content %}
+
 <div class="row justify-content-center mt-5">
-    <div class="col-md-4 text-center">
+    <div class="col-md-4">
 
-        <h2 class="fw-bold mb-4">You have been logged out</h2>
+        <div class="gamerbay-card p-4 text-center">
 
-        <a href="{% url 'login' %}" class="btn btn-primary w-100">Login Again</a>
-        <a href="{% url 'home' %}" class="btn btn-secondary w-100 mt-3">Return Home</a>
+            <h2 class="fw-bold mb-4 text-white">You have been logged out</h2>
+
+            <a href="{% url 'login' %}" class="btn gamerbay-btn-primary w-100 mb-3">
+                Login Again
+            </a>
+
+            <a href="{% url 'home' %}" class="btn gamerbay-btn-secondary w-100">
+                Return Home
+            </a>
+
+        </div>
 
     </div>
 </div>
+
 {% endblock %}

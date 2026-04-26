@@ -4,13 +4,13 @@
 
 {% block content %}
 
-<!-- Hero Section -->
-<div class="mb-5 text-center">
-    <h1 class="fw-bold">Welcome to GamerBay</h1>
-    <p class="text-muted">Discover featured games or browse by platform and genre.</p>
+<!-- HERO -->
+<div class="text-center mb-5">
+    <h1 class="fw-bold text-white">Welcome to GamerBay</h1>
+    <p class="gamerbay-subheader">Discover featured games or browse by platform family</p>
 </div>
 
-<!-- Featured Carousel -->
+<!-- FEATURED CAROUSEL -->
 <div id="featuredCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
     <div class="carousel-inner">
 
@@ -23,12 +23,13 @@
             <img src="https://via.placeholder.com/1200x400?text={{ game.title|urlencode }}" class="d-block w-100">
             {% endif %}
 
-            <div class="carousel-caption d-none d-md-block text-start">
-                <div class="bg-dark bg-opacity-50 p-3 rounded">
-                    <h3 class="fw-bold mb-1">{{ game.title }}</h3>
-                    <p class="mb-1">{{ game.platform }}</p>
-                    <p class="fw-bold mb-2">{{ game.price|currency }}</p>
-                    <a href="{% url 'product_detail' game.slug %}" class="btn btn-primary btn-sm">
+            <!-- FAMILY COLOUR APPLIED TO OUTER WRAPPER -->
+            <div class="carousel-caption d-none d-md-block text-start family-{{ game.platform.family.slug }}">
+                <div class="gamerbay-card p-3 carousel-overlay">
+                    <h3 class="fw-bold mb-1 text-white">{{ game.title }}</h3>
+                    <p class="mb-1 text-light">{{ game.platform }}</p>
+                    <p class="fw-bold mb-2 text-white">{{ game.price|currency }}</p>
+                    <a href="{% url 'product_detail' game.slug %}" class="btn gamerbay-btn-primary btn-sm">
                         View Game
                     </a>
                 </div>
@@ -48,37 +49,24 @@
     </button>
 </div>
 
-<!-- Browse by Platform Family -->
-<h2 class="fw-bold mt-5 mb-3">Browse by Platform Family</h2>
+<!-- PLATFORM FAMILIES (CENTERED) -->
+<div class="container text-center">
+    <h2 class="fw-bold mt-5 mb-3 text-white">Browse by Platform Family</h2>
 
-<div class="row g-3">
-    {% for family in families %}
-    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-        <a href="{% url 'platform_family' family.slug %}" class="text-decoration-none">
-            <div class="card card-tile h-100 text-center shadow-sm p-3">
-                <img src="{% static 'core/families/' %}{{ family.slug }}.svg"
-                     class="img-fluid mb-2" alt="{{ family.name }}">
-                <h6 class="mb-0">{{ family.name }}</h6>
-            </div>
-        </a>
+    <div class="row g-3 justify-content-center">
+        {% for family in families %}
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+            <a href="{% url 'platform_family' family.slug %}" class="text-decoration-none">
+                <div class="gamerbay-card platform-tile h-100 text-center p-3 family-{{ family.slug }}">
+                    <img src="{% static 'core/families/' %}{{ family.slug }}.svg"
+                         class="platform-icon mb-2"
+                         alt="{{ family.name }}">
+                    <h6 class="mb-0 text-white">{{ family.name }}</h6>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
-
-<!-- Browse by Genre -->
-<h2 class="fw-bold mt-5 mb-3">Browse by Genre</h2>
-
-<div class="row g-3 mb-5">
-    {% for g in genres %}
-    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-        <a href="{% url 'product_list' %}?genre={{ g.slug }}" class="text-decoration-none">
-            <div class="card card-tile h-100 text-center shadow-sm p-2">
-                <img src="{% static 'core/genres/' %}{{ g.slug }}.svg" class="img-fluid mb-2" alt="{{ g.name }}">
-                <h6 class="mb-0">{{ g.name }}</h6>
-            </div>
-        </a>
-    </div>
-    {% endfor %}
 </div>
 
 {% endblock %}

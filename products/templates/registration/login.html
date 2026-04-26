@@ -1,48 +1,60 @@
 {% extends "base.html" %}
+{% load form_extras %}
 
 {% block title %}Login{% endblock %}
 
 {% block content %}
+
 <div class="row justify-content-center mt-5">
     <div class="col-md-4">
 
-        <h2 class="fw-bold mb-4 text-center">Login</h2>
+        <div class="gamerbay-card p-4">
 
-        {% if form.errors %}
-        <div class="alert alert-danger">
-            Invalid username or password.
+            <h2 class="fw-bold mb-4 text-center text-white">Login</h2>
+
+            {% if form.errors %}
+            <div class="gamerbay-error mb-3 p-2 text-center">
+                Invalid username or password.
+            </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- USERNAME -->
+                <div class="mb-3">
+                    <label class="form-label text-light">Username</label>
+                    {{ form.username|add_class:"form-control gamerbay-input" }}
+                </div>
+
+                <!-- PASSWORD -->
+                <div class="mb-3">
+                    <label class="form-label text-light">Password</label>
+                    {{ form.password|add_class:"form-control gamerbay-input" }}
+                </div>
+
+                <!-- REMEMBER ME -->
+                <div class="form-check mb-3">
+                    <input class="form-check-input gamerbay-checkbox" type="checkbox" name="remember_me" id="rememberMe">
+                    <label class="form-check-label text-light" for="rememberMe">
+                        Remember me
+                    </label>
+                </div>
+
+                <!-- SUBMIT -->
+                <button type="submit" class="btn gamerbay-btn-primary w-100">
+                    Login
+                </button>
+            </form>
+
+            <p class="text-center mt-3 text-light">
+                Don’t have an account?
+                <a href="{% url 'register' %}" class="gamerbay-link">Register</a>
+            </p>
+
         </div>
-        {% endif %}
-
-        <form method="post">
-            {% csrf_token %}
-
-            <div class="mb-3">
-                <label class="form-label">Username</label>
-                {{ form.username }}
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                {{ form.password }}
-            </div>
-
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" name="remember_me" id="rememberMe">
-                <label class="form-check-label" for="rememberMe">
-                    Remember me
-                </label>
-            </div>
-
-
-            <button type="submit" class="btn btn-primary w-100">Login</button>
-        </form>
-
-        <p class="text-center mt-3">
-            Don’t have an account?
-            <a href="{% url 'register' %}">Register</a>
-        </p>
 
     </div>
 </div>
+
 {% endblock %}

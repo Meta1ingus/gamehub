@@ -4,6 +4,8 @@ from core import views as core_views
 from products import views as products_views
 from checkout.webhooks import stripe_webhook
 from users.views import CustomLoginView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("", core_views.home, name="home"),
@@ -21,3 +23,5 @@ urlpatterns = [
 
     path("profile/", include("users.urls")),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

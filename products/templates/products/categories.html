@@ -7,7 +7,7 @@
 
 <div class="mb-5">
     <h1 class="fw-bold mb-2">Browse Categories</h1>
-    <p class="text-muted">Choose how you want to explore the store.</p>
+    <p class="gamerbay-subheader">Choose how you want to explore the store</p>
 </div>
 
 <!-- Platforms Section -->
@@ -18,13 +18,11 @@
         {% for platform in platforms %}
         <div class="col-6 col-sm-4 col-md-3 col-lg-2">
             <a href="{% url 'product_list' %}?platform={{ platform.slug }}" class="text-decoration-none">
-                <div class="card card-tile h-100 text-center shadow-sm p-3"
-                     style="background: linear-gradient(135deg, #2a2a2a, #1a1a1a); border-radius: 10px;">
+                <div class="platform-tile gamerbay-card h-100 text-center p-3">
 
                     <!-- Platform SVG -->
                     <img src="{% static 'core/platforms/' %}{{ platform.slug }}.svg"
-                         class="img-fluid mb-2" alt="{{ platform.name }}"
-                         style="max-height: 48px;">
+                         class="platform-icon mb-2" alt="{{ platform.name }}">
 
                     <h6 class="mb-0 text-white">{{ platform.name }}</h6>
                     <small class="text-white-50">{{ platform.game_count }} games</small>
@@ -46,13 +44,11 @@
         {% for genre in genres %}
         <div class="col-6 col-sm-4 col-md-3 col-lg-2">
             <a href="{% url 'product_list' %}?genre={{ genre.slug }}" class="text-decoration-none">
-                <div class="card card-tile h-100 text-center shadow-sm p-3"
-                     style="background: linear-gradient(135deg, #2a2a2a, #1a1a1a); border-radius: 10px;">
+                <div class="genre-tile gamerbay-card h-100 text-center p-3">
 
                     <!-- Genre SVG -->
                     <img src="{% static 'core/genres/' %}{{ genre.slug }}.svg"
-                         class="img-fluid mb-2" alt="{{ genre.name }}"
-                         style="max-height: 48px;">
+                         class="genre-icon mb-2" alt="{{ genre.name }}">
 
                     <h6 class="mb-0 text-white">{{ genre.name }}</h6>
                     <small class="text-white-50">{{ genre.game_count }} games</small>

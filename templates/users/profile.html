@@ -1,11 +1,37 @@
-<h1>{{ profile.user.username }}</h1>
+{% extends "base.html" %}
 
-{% if profile.avatar %}
-    <img src="{{ profile.avatar.url }}" alt="Avatar" width="150">
-{% endif %}
+{% block title %}{{ profile.user.username }}{% endblock %}
 
-<p>{{ profile.bio }}</p>
+{% block content %}
 
-{% if request.user == profile.user %}
-    <a href="{% url 'profile_edit' %}">Edit Profile</a>
-{% endif %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+
+        <div class="gamerbay-card p-4 text-center">
+
+            <h1 class="fw-bold text-white mb-3">{{ profile.user.username }}</h1>
+
+            {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}" alt="Avatar"
+                     class="rounded-circle mb-3"
+                     style="width: 150px; height: 150px; object-fit: cover;">
+            {% else %}
+                <img src="https://via.placeholder.com/150x150?text=No+Avatar"
+                     class="rounded-circle mb-3"
+                     alt="No avatar">
+            {% endif %}
+
+            <p class="text-light mb-4">{{ profile.bio }}</p>
+
+            {% if request.user == profile.user %}
+                <a href="{% url 'profile_edit' %}" class="btn gamerbay-btn-primary w-100">
+                    Edit Profile
+                </a>
+            {% endif %}
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

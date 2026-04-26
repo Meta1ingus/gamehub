@@ -3,38 +3,49 @@
 {% block title %}Your Orders{% endblock %}
 
 {% block content %}
+
 <div class="row justify-content-center mt-5">
     <div class="col-md-8">
 
-        <h2 class="fw-bold mb-4">Your Orders</h2>
+        <div class="gamerbay-card p-4">
 
-        {% if orders %}
-        <ul class="list-group">
-            {% for order in orders %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <a href="{% url 'order_detail' order.id %}" class="text-decoration-none">
-                    <strong>Order #{{ order.id }}</strong><br>
-                    <small>{{ order.created_at|date:"F j, Y, g:i a" }}</small>
-                </a>
+            <h2 class="fw-bold mb-4 text-white">Your Orders</h2>
 
-                <div>
-                    £{{ order.total_amount }}
-                    {% if order.is_paid %}
-                    <span class="badge bg-success ms-2">Paid</span>
-                    {% else %}
-                    <span class="badge bg-warning text-dark ms-2">Pending</span>
-                    {% endif %}
-                </div>
-            </li>
+            {% if orders %}
+            <ul class="list-group list-group-flush">
 
-            {% endfor %}
-        </ul>
-        {% else %}
-        <div class="alert alert-info">
-            You have no orders yet.
+                {% for order in orders %}
+                <li class="list-group-item bg-transparent text-white d-flex justify-content-between align-items-center border-secondary">
+
+                    <a href="{% url 'order_detail' order.id %}" class="text-decoration-none text-white">
+                        <strong>Order #{{ order.id }}</strong><br>
+                        <small class="text-light">{{ order.created_at|date:"F j, Y, g:i a" }}</small>
+                    </a>
+
+                    <div class="text-end">
+                        <span class="fw-bold">£{{ order.total_amount }}</span>
+
+                        {% if order.is_paid %}
+                        <span class="badge gamerbay-badge-success ms-2">Paid</span>
+                        {% else %}
+                        <span class="badge gamerbay-badge-warning ms-2">Pending</span>
+                        {% endif %}
+                    </div>
+
+                </li>
+                {% endfor %}
+
+            </ul>
+
+            {% else %}
+            <div class="alert gamerbay-alert-info text-center mt-3">
+                You have no orders yet.
+            </div>
+            {% endif %}
+
         </div>
-        {% endif %}
 
     </div>
 </div>
+
 {% endblock %}

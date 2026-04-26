@@ -17,8 +17,6 @@
         <tr>
             <th>Cover</th>
             <th>Name</th>
-            <th>Release Date</th>
-            <th>Platforms</th>
             <th>IGDB ID</th>
             <th>Import</th>
         </tr>
@@ -39,24 +37,6 @@
 
             <!-- Name -->
             <td>{{ game.name }}</td>
-
-            <!-- Release Date -->
-            <td>
-                {% if game.first_release_date %}
-                    {{ game.first_release_date|date:"Y-m-d" }}
-                {% else %}
-                    —
-                {% endif %}
-            </td>
-
-            <!-- Platforms -->
-            <td>
-                {% if game.platforms %}
-                    {{ game.platforms|join:", " }}
-                {% else %}
-                    —
-                {% endif %}
-            </td>
 
             <!-- IGDB ID -->
             <td>{{ game.id }}</td>

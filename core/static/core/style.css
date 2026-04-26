@@ -1,150 +1,657 @@
+/* GAMERBAY - GLOBAL VARIABLES */
+
+:root {
+    /* Family Colours */
+    --ps-blue: #00aaff;
+    --xbox-green: #00ff9d;
+    --nintendo-red: #ff4e4e;
+    --pc-purple: #9b5de5;
+
+    /* Genre Colour */
+    --genre-pink: #ff4ecd;
+
+    /* Card Background Gradient */
+    --card-bg-1: #1c2333;
+    --card-bg-2: #161d2a;
+    --card-bg-3: #121826;
+}
+
+/* GLOBAL BACKGROUND + TEXT */
+
 body {
-    background: #3e2fe6;
+    background: radial-gradient(circle at top, #1a1a3d 0%, #0a0f1f 70%);
+    color: #e5e7eb;
 }
 
-/* Tier 1 - Light hover (homepage tiles) */
-.card-tile {
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
+.gamerbay-subheader {
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 0 4px rgba(0, 255, 157, 0.25);
+    font-weight: 300;
+    letter-spacing: 0.02em;
 }
 
-.card-tile:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+/* UNIFIED NEON CARD SYSTEM */
+
+.gamerbay-card,
+.platform-tile,
+.card-product,
+.card-category,
+.card-genre {
+    background: linear-gradient(145deg, var(--card-bg-1) 0%, var(--card-bg-2) 50%, var(--card-bg-3) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-/* Tier 2 - Medium hover (category cards) */
-.card-category {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* Base hover */
+.gamerbay-card:hover,
+.platform-tile:hover,
+.card-product:hover,
+.card-category:hover,
+.card-genre:hover {
+    transform: translateY(-4px) scale(1.02);
 }
 
-.card-category:hover {
-    transform: translateY(-4px) scale(1.01);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+/* FAMILY COLOUR VARIABLE MAPPING */
+
+.family-playstation { --family-color: var(--ps-blue); }
+.family-xbox        { --family-color: var(--xbox-green); }
+.family-nintendo    { --family-color: var(--nintendo-red); }
+.family-pc          { --family-color: var(--pc-purple); }
+
+/* FAMILY GLOW SYSTEM - PRODUCT LIST + DETAIL PAGES */
+
+.family-playstation .gamerbay-card:hover,
+.family-playstation .card-product:hover {
+    border-color: var(--ps-blue);
+    box-shadow: 0 0 14px rgba(0, 170, 255, 0.35);
 }
 
-/* Tier 3 - Strong hover (product cards) */
-.card-product {
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+.family-xbox .gamerbay-card:hover,
+.family-xbox .card-product:hover {
+    border-color: var(--xbox-green);
+    box-shadow: 0 0 14px rgba(0, 255, 157, 0.35);
 }
 
-.card-product:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+.family-nintendo .gamerbay-card:hover,
+.family-nintendo .card-product:hover {
+    border-color: var(--nintendo-red);
+    box-shadow: 0 0 14px rgba(255, 78, 78, 0.35);
 }
 
-/* Smooth image zoom on hover */
-.card img {
+.family-pc .gamerbay-card:hover,
+.family-pc .card-product:hover {
+    border-color: var(--pc-purple);
+    box-shadow: 0 0 14px rgba(155, 93, 229, 0.35);
+}
+
+/* PLATFORM ICON GLOW */
+
+.family-playstation .platform-icon,
+.family-playstation .platform-badge img {
+    filter: drop-shadow(0 0 6px var(--ps-blue));
+}
+
+.family-xbox .platform-icon,
+.family-xbox .platform-badge img {
+    filter: drop-shadow(0 0 6px var(--xbox-green));
+}
+
+.family-nintendo .platform-icon,
+.family-nintendo .platform-badge img {
+    filter: drop-shadow(0 0 6px var(--nintendo-red));
+}
+
+.family-pc .platform-icon,
+.family-pc .platform-badge img {
+    filter: drop-shadow(0 0 6px var(--pc-purple));
+}
+
+/* HOME PAGE - PLATFORM TILE GLOW */
+
+.platform-tile.family-playstation:hover {
+    border-color: var(--ps-blue);
+    box-shadow: 0 0 14px rgba(0, 170, 255, 0.45);
+}
+
+.platform-tile.family-xbox:hover {
+    border-color: var(--xbox-green);
+    box-shadow: 0 0 14px rgba(0, 255, 157, 0.45);
+}
+
+.platform-tile.family-nintendo:hover {
+    border-color: var(--nintendo-red);
+    box-shadow: 0 0 14px rgba(255, 78, 78, 0.45);
+}
+
+.platform-tile.family-pc:hover {
+    border-color: var(--pc-purple);
+    box-shadow: 0 0 14px rgba(155, 93, 229, 0.45);
+}
+
+/* HOME PAGE — PLATFORM ICON GLOW */
+
+.platform-tile.family-playstation .platform-icon {
+    filter: drop-shadow(0 0 8px var(--ps-blue));
+}
+
+.platform-tile.family-xbox .platform-icon {
+    filter: drop-shadow(0 0 8px var(--xbox-green));
+}
+
+.platform-tile.family-nintendo .platform-icon {
+    filter: drop-shadow(0 0 8px var(--nintendo-red));
+}
+
+.platform-tile.family-pc .platform-icon {
+    filter: drop-shadow(0 0 8px var(--pc-purple));
+}
+
+/* PLATFORM TILE BASE */
+
+.platform-tile {
+    padding: 18px 10px;
+    text-align: center;
+    box-shadow: 0 0 6px rgba(0,0,0,0.4);
+}
+
+.platform-icon {
+    height: 40px;
+    width: auto;
+    transition: filter 0.25s ease;
+}
+
+/* PRODUCT LIST */
+
+.card-product img {
     transition: transform 0.3s ease;
 }
 
-.card:hover img {
+.card-product:hover img {
     transform: scale(1.05);
 }
 
-/* Neon badge for cart item count */
-.neon-badge {
-    background: #00ff9d;
-    color: #000;
-    font-weight: 600;
-    padding: 0.25rem 0.45rem;
-    border-radius: 50px;
-    font-size: 0.75rem;
-    box-shadow: 0 0 6px #00ff9d, 0 0 12px #00ff9d;
-    animation: neon-pop 0.25s ease-out;
-    transform: translateX(-60%);
+.product-thumb {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 12px;
 }
 
-@keyframes neon-pop {
-    0% { transform: scale(0.5); opacity: 0; }
-    70% { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(1); }
-}
-
-/* Optional: stronger glow on dark navbars */
-.navbar-dark .neon-badge {
-    box-shadow: 0 0 8px #00ff9d, 0 0 16px #00ff9d;
-}
-
-/* Optional: hover glow */
-.nav-link:hover .neon-badge {
-    box-shadow: 0 0 10px #00ff9d, 0 0 20px #00ff9d;
-}
-
-/* Additional GamerBay product detail styles */
-
-.gamerbay-pill {
-    letter-spacing: 0.06em;
-    font-size: 0.7rem;
-    border-radius: 999px;
-}
-
-.gamerbay-title {
-    font-weight: 700;
-    letter-spacing: 0.03em;
-}
+/* GAME DETAIL */
 
 .gamerbay-pricebox {
     background: #111;
     border: 1px solid #222;
     box-shadow: 0 0 12px rgba(0, 255, 157, 0.15);
-}
-
-.gamerbay-pricebox h3 {
-    font-weight: 700;
-    letter-spacing: 0.03em;
-}
-
-.gamerbay-pricebox .btn-primary {
-    background: #00ff9d;
-    border-color: #00ff9d;
-    color: #000;
-    font-weight: 600;
-    box-shadow: 0 0 8px #00ff9d;
-}
-
-.gamerbay-pricebox .btn-primary:hover {
-    background: #00e68d;
-    border-color: #00e68d;
-    box-shadow: 0 0 12px #00ff9d;
-}
-
-.gamerbay-section {
-    background: #0d0d0d;
-    border: 1px solid #1a1a1a;
-    padding: 1.5rem;
+    padding: 1rem;
     border-radius: 8px;
-    box-shadow: 0 0 12px rgba(0, 255, 157, 0.08);
 }
 
-.gamerbay-section-title {
+/* NAVBAR */
+
+.gamerbay-navbar {
+    background: rgba(10, 15, 31, 0.85) !important;
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(0, 255, 157, 0.15);
+    position: relative;
+    z-index: 9999;
+}
+
+.gamerbay-navbar .navbar-brand {
+    color: #00ff9d !important;
     font-weight: 700;
-    letter-spacing: 0.04em;
-    margin-bottom: 1rem;
-    color: #00ff9d;
-    text-transform: uppercase;
-    font-size: 1rem;
+    letter-spacing: 0.05em;
 }
 
-.gamerbay-related-card {
-    background: #0d0d0d;
-    border: 1px solid #1a1a1a;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+.gamerbay-navbar .nav-link {
+    color: #e5e7eb !important;
+    transition: 0.2s ease;
 }
 
-.gamerbay-related-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 0 12px rgba(0, 255, 157, 0.15);
+.gamerbay-navbar .nav-link:hover {
+    color: #00ff9d !important;
+    text-shadow: 0 0 6px #00ff9d;
 }
 
-.platform-badge {
-    display: inline-flex;
+/* NEON DROPDOWN */
+.gamerbay-navbar .dropdown-menu {
+    background: rgba(10, 15, 31, 0.95) !important;
+    border: 1px solid rgba(0, 255, 157, 0.25);
+    box-shadow: 0 0 12px rgba(0, 255, 157, 0.25);
+    backdrop-filter: blur(6px);
+}
+
+/* NAVBAR ALIGNMENT FIX */
+.gamerbay-navbar .navbar-nav .nav-link {
+    display: flex;
+    align-items: center;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+}
+
+/* Fix search bar height + alignment */
+.gamerbay-navbar .form-control {
+    height: 38px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+}
+
+/* Fix search button alignment */
+.gamerbay-navbar .btn {
+    height: 38px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4px;
 }
 
-.platform-icon {
-    width: 24px;
-    height: 24px;
+/* NAVBAR - ALIGNMENT */
+.gamerbay-navbar .navbar-nav .nav-link,
+.gamerbay-navbar .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    height: 38px;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.gamerbay-navbar .dropdown-item {
+    color: #e5e7eb !important;
+    transition: 0.2s ease;
+}
+
+.gamerbay-navbar .dropdown-item:hover {
+    background: rgba(0, 255, 157, 0.1) !important;
+    color: #00ff9d !important;
+    text-shadow: 0 0 6px #00ff9d;
+}
+
+.gamerbay-navbar .nav-link {
+    position: relative;
+}
+
+.gamerbay-navbar .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 2px;
+    width: 0%;
+    height: 2px;
+    background: #00ff9d;
+    box-shadow: 0 0 6px #00ff9d;
+    transition: width 0.25s ease;
+}
+
+.gamerbay-navbar .nav-link:hover::after {
+    width: 100%;
+}
+
+/* Remove neon underline from dropdown toggle */
+.gamerbay-navbar .dropdown-toggle::after {
+    content: none !important;
+}
+
+/* PRICE - FAMILY COLOUR */
+
+.card-product .price {
+    color: var(--family-color, #fff);
+    font-weight: 700;
+    text-shadow: 0 0 6px rgba(0,0,0,0.8);
+}
+
+/* LIGHT GLASS OVERLAY FOR CAROUSEL */
+.carousel-overlay {
+    background: rgba(10, 15, 31, 0.55);
+    border-radius: 8px;
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* FAMILY COLOUR GLOW — CAROUSEL */
+.family-playstation .carousel-overlay {
+    border-color: var(--ps-blue);
+    box-shadow: 0 0 14px rgba(0, 170, 255, 0.35);
+}
+
+.family-xbox .carousel-overlay {
+    border-color: var(--xbox-green);
+    box-shadow: 0 0 14px rgba(0, 255, 157, 0.35);
+}
+
+.family-nintendo .carousel-overlay {
+    border-color: var(--nintendo-red);
+    box-shadow: 0 0 14px rgba(255, 78, 78, 0.35);
+}
+
+.family-pc .carousel-overlay {
+    border-color: var(--pc-purple);
+    box-shadow: 0 0 14px rgba(155, 93, 229, 0.35);
+}
+
+/* CAROUSEL - FAMILY COLOURED TEXT + ICONS */
+.family-playstation .carousel-overlay h3,
+.family-playstation .carousel-overlay p,
+.family-playstation .carousel-overlay .price {
+    color: var(--ps-blue) !important;
+    text-shadow: 0 0 8px rgba(0, 170, 255, 0.6);
+}
+
+.family-xbox .carousel-overlay h3,
+.family-xbox .carousel-overlay p,
+.family-xbox .carousel-overlay .price {
+    color: var(--xbox-green) !important;
+    text-shadow: 0 0 8px rgba(0, 255, 157, 0.6);
+}
+
+.family-nintendo .carousel-overlay h3,
+.family-nintendo .carousel-overlay p,
+.family-nintendo .carousel-overlay .price {
+    color: var(--nintendo-red) !important;
+    text-shadow: 0 0 8px rgba(255, 78, 78, 0.6);
+}
+
+.family-pc .carousel-overlay h3,
+.family-pc .carousel-overlay p,
+.family-pc .carousel-overlay .price {
+    color: var(--pc-purple) !important;
+    text-shadow: 0 0 8px rgba(155, 93, 229, 0.6);
+}
+
+/* CAROUSEL - PLATFORM ICON GLOW */
+.family-playstation .carousel-overlay .platform-icon {
+    filter: drop-shadow(0 0 10px var(--ps-blue));
+}
+
+.family-xbox .carousel-overlay .platform-icon {
+    filter: drop-shadow(0 0 10px var(--xbox-green));
+}
+
+.family-nintendo .carousel-overlay .platform-icon {
+    filter: drop-shadow(0 0 10px var(--nintendo-red));
+}
+
+.family-pc .carousel-overlay .platform-icon {
+    filter: drop-shadow(0 0 10px var(--pc-purple));
+}
+
+/* CAROUSEL - FAMILY COLOURED BUTTON */
+.family-playstation .carousel-overlay .gamerbay-btn-primary {
+    border: 1px solid var(--ps-blue);
+    color: var(--ps-blue) !important;
+    text-shadow: 0 0 6px rgba(0, 170, 255, 0.6);
+}
+
+.family-xbox .carousel-overlay .gamerbay-btn-primary {
+    border: 1px solid var(--xbox-green);
+    color: var(--xbox-green) !important;
+    text-shadow: 0 0 6px rgba(0, 255, 157, 0.6);
+}
+
+.family-nintendo .carousel-overlay .gamerbay-btn-primary {
+    border: 1px solid var(--nintendo-red);
+    color: var(--nintendo-red) !important;
+    text-shadow: 0 0 6px rgba(255, 78, 78, 0.6);
+}
+
+.family-pc .carousel-overlay .gamerbay-btn-primary {
+    border: 1px solid var(--pc-purple);
+    color: var(--pc-purple) !important;
+    text-shadow: 0 0 6px rgba(155, 93, 229, 0.6);
+}
+
+/* Optional: glow on hover */
+.carousel-overlay .gamerbay-btn-primary:hover {
+    box-shadow: 0 0 12px currentColor;
+    transform: translateY(-2px);
+}
+
+/* HERO IMAGE NORMALISATION */
+.carousel-item img {
+    height: 720px;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 8px;
+}
+
+/* CAROUSEL - HERO IMAGE ZOOM */
+.carousel-item img {
+    transition: transform 12s ease-in-out;
+}
+
+.carousel-item.active img {
+    transform: scale(1.08);
+}
+
+.carousel-overlay {
+    opacity: 0;
+    transition: opacity 1.2s ease;
+}
+
+.carousel-item.active .carousel-overlay {
+    opacity: 1;
+}
+
+/* HERO BACKDROP */
+.product-hero {
+    position: relative;
+    padding: 60px 0;
+    color: #fff;
+    overflow: hidden;
+}
+
+.product-hero:not(.product-hero--fallback) {
+    background-image: var(--hero-url);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.product-hero--fallback {
+    background-image: linear-gradient(135deg, #0a0f1f 0%, #1a103d 40%, #3b1e6d 100%);
+}
+
+.product-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(12px);
+    z-index: 1;
+}
+
+.product-hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* COVER ART */
+.product-hero__cover-wrapper {
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.product-hero__cover-img {
+    display: block;
+    width: 100%;
+}
+
+/* GLASS INFO PANEL */
+.product-info-panel {
+    background: rgba(10, 15, 31, 0.55);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    padding: 1.75rem 1.75rem 1.5rem;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.7);
+}
+
+/* FAMILY GLOW */
+.family-playstation .product-info-panel {
+    border-color: var(--ps-blue);
+    box-shadow: 0 0 18px rgba(0, 170, 255, 0.35);
+}
+
+.family-xbox .product-info-panel {
+    border-color: var(--xbox-green);
+    box-shadow: 0 0 18px rgba(0, 255, 157, 0.35);
+}
+
+.family-nintendo .product-info-panel {
+    border-color: var(--nintendo-red);
+    box-shadow: 0 0 18px rgba(255, 78, 78, 0.35);
+}
+
+.family-pc .product-info-panel {
+    border-color: var(--pc-purple);
+    box-shadow: 0 0 18px rgba(155, 93, 229, 0.35);
+}
+
+/* BADGES */
+.gamerbay-badge-featured {
+    background: #ffd54a;
+    color: #1a1308;
+    font-weight: 600;
+    border-radius: 999px;
+}
+
+.gamerbay-badge-platform,
+.gamerbay-badge-genre {
+    background: rgba(8, 12, 24, 0.9);
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* TITLE + META */
+.product-info-panel__title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.family-playstation .product-info-panel__title { color: var(--ps-blue); }
+.family-xbox .product-info-panel__title       { color: var(--xbox-green); }
+.family-nintendo .product-info-panel__title   { color: var(--nintendo-red); }
+.family-pc .product-info-panel__title         { color: var(--pc-purple); }
+
+.product-info-panel__meta {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
+
+/* PRICE BOX */
+.product-pricebox {
+    background: rgba(3, 6, 16, 0.85);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1.25rem 1.5rem;
+}
+
+.product-pricebox__price {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+/* FAMILY COLOUR PRICE */
+.family-playstation .product-pricebox__price { color: var(--ps-blue); }
+.family-xbox .product-pricebox__price       { color: var(--xbox-green); }
+.family-nintendo .product-pricebox__price   { color: var(--nintendo-red); }
+.family-pc .product-pricebox__price         { color: var(--pc-purple); }
+
+/* BUTTONS */
+.gamerbay-btn-primary {
+    background: linear-gradient(135deg, #0f9bff, #00ffc8);
+    border: none;
+    color: #050814;
+    font-weight: 600;
+    box-shadow: 0 0 16px rgba(0, 255, 200, 0.35);
+}
+
+.gamerbay-btn-primary:hover {
+    filter: brightness(1.05);
+}
+
+.gamerbay-btn-accent {
+    background: linear-gradient(135deg, #ff4b7d, #ffb347);
+    border: none;
+    color: #140509;
+    font-weight: 600;
+    box-shadow: 0 0 16px rgba(255, 75, 125, 0.4);
+}
+
+.gamerbay-btn-accent:hover {
+    filter: brightness(1.05);
+}
+
+/* BADGE VARIANTS */
+.gamerbay-badge-info {
+    background: rgba(0, 180, 255, 0.18);
+    border: 1px solid rgba(0, 180, 255, 0.6);
+    color: #e3f6ff;
+}
+
+.gamerbay-badge-danger {
+    background: rgba(255, 64, 64, 0.18);
+    border: 1px solid rgba(255, 64, 64, 0.7);
+    color: #ffd6d6;
+}
+
+/* SECTION STYLING */
+.product-section {
+    margin-top: 1.5rem;
+}
+
+.product-section__title {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0.5rem;
+    position: relative;
+    padding-bottom: 0.35rem;
+}
+
+.product-section__title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 64px;
+    height: 2px;
+    background: linear-gradient(90deg, #0fffc8, transparent);
+    opacity: 0.8;
+}
+
+.product-section__body {
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* BADGES */
+.gamerbay-badge-platform,
+.gamerbay-badge-genre {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;            /* more breathing room */
+    padding: 0.55rem 1.1rem; /* scaled up for 32px icon */
+    font-size: 0.85rem;      /* matches icon weight */
+    letter-spacing: 0.06em;
+}
+
+/* ICON TOKEN */
+.gamerbay-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 3px;
     object-fit: contain;
+    display: inline-block;
 }

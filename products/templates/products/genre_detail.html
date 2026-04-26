@@ -1,40 +1,52 @@
 {% extends "base.html" %}
+{% load static %}
+{% load currency %}
 
 {% block title %}{{ genre.name }}{% endblock %}
 
 {% block content %}
 
-<!-- Header / Banner -->
-<div class="mb-4 p-4 text-white rounded"
-     style="
-        {% if genre.image %}
-            background: url('{{ genre.image.url }}') center/cover no-repeat;
-        {% else %}
-            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
-        {% endif %}
-     ">
-    <h1 class="fw-bold">{{ genre.name }}</h1>
-    <p class="mb-0">Games in this genre.</p>
-</div>
+<div class="genre-page">
 
-<!-- Games Grid -->
-<div class="row">
-    {% for game in games %}
-    <div class="col-md-3 mb-4">
-        <a href="{% url 'game_detail' game.slug %}" class="text-decoration-none text-white">
-            <div class="card bg-dark text-white shadow-sm" style="height: 100%;">
-                {% if game.image %}
-                <img src="{{ game.image.url }}" class="card-img-top" alt="{{ game.title }}">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ game.title }}</h5>
-                </div>
-            </div>
-        </a>
+    <!-- Header / Banner -->
+    <div class="mb-4 p-4 text-white rounded gamerbay-card genre-tile"
+         style="
+            {% if genre.image %}
+                background: url('{{ genre.image.url }}') center/cover no-repeat;
+            {% else %}
+                background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            {% endif %}
+         ">
+        <h1 class="fw-bold text-white">{{ genre.name }}</h1>
+        <p class="mb-0 text-light">Games in this genre.</p>
     </div>
-    {% empty %}
-    <p>No games available in this genre yet.</p>
-    {% endfor %}
+
+    <!-- Games Grid -->
+    <div class="row">
+        {% for game in games %}
+        <div class="col-md-3 mb-4">
+            <a href="{% url 'product_detail' game.slug %}" class="text-decoration-none text-white">
+                <div class="gamerbay-card card-product h-100">
+
+                    {% if game.image %}
+                    <img src="{{ game.image.url }}" class="product-thumb" alt="{{ game.title }}">
+                    {% else %}
+                    <img src="https://via.placeholder.com/300x200?text=No+Image"
+                         class="product-thumb" alt="No image">
+                    {% endif %}
+
+                    <div class="card-body">
+                        <h5 class="card-title text-white">{{ game.title }}</h5>
+                    </div>
+
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <p class="text-light">No games available in this genre yet.</p>
+        {% endfor %}
+    </div>
+
 </div>
 
 {% endblock %}
