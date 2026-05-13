@@ -8,6 +8,7 @@ from django.db.models import Q, Count
 from django.contrib import messages
 from django.urls import reverse
 from core.stripe_service import create_checkout_session
+from django.contrib.auth import login
 
 def product_list(request):
     games = Game.objects.all()
