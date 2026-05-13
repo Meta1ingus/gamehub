@@ -23,7 +23,7 @@ A breakdown of the technologies, tools, and services used to build and deploy Ga
 | **Backend**        | Python 3, Django, Django ORM, Custom IGDB Importer                                    |
 | **Database**       | SQLite (development & deployment)                                    |
 | **Frontend**       | HTML5, CSS3, Bootstrap 5, Custom Neon Styling, JavaScript (minimal, UX‑focused)       |
-| **Payments**       | Stripe Checkout, Stripe Webhooks, Signing Secret Validation                           |
+| **Payments**       | Stripe Checkout, Stripe Webhooks (checkout.session.completed), Secure signing secret validation, Server‑side order creation and post‑payment processing                           |
 | **Deployment**     | Raspberry Pi Server, Gunicorn, Cloudflare Tunnel (HTTPS), Environment Variables       |
 | **Static Handling**| Django `collectstatic`, Cloudflare CDN caching                                        |
 | **Version Control**| Git, GitHub                                                                            |
@@ -49,6 +49,7 @@ A breakdown of the technologies, tools, and services used to build and deploy Ga
 - [Screenshots & Error Fixes](#screenshots--error-fixes)
 - [Testing](#testing)
 - [Future Enhancements](#future-enhancements)
+- [Changelog](#changelog)
 - [Credits & Acknowledgements](#credits--acknowledgements)
 - [Disclaimer](#disclaimer)
 
@@ -72,6 +73,10 @@ A breakdown of the technologies, tools, and services used to build and deploy Ga
     Games marked as free‑to‑play include a direct link to their official external storefront  
     (e.g., Steam, Epic Games Store, PlayStation Store).  
     Instead of a price or purchase button, users see a **“Download Free”** action that redirects them to the official source.
+  - **Secure Stripe Checkout** for single‑item and multi‑item purchases  
+  - **Automatic cart clearing** after successful payment  
+  - **Webhook‑driven order confirmation**  
+  - **Stock reduction** for physical items after purchase  
 
 - **Shopping Cart System**  
   Users can add items to a cart, update quantities, and remove items.  
@@ -351,6 +356,26 @@ These features work together to provide a smooth and reliable purchasing experie
 
 ---
 
+## Post‑Payment Order Processing
+
+After Stripe confirms a successful payment, the webhook handler performs all final order actions:
+
+### Order Finalisation  
+- Marks the order as paid  
+- Stores the Stripe session ID for reference  
+
+### Stock Management  
+- Reduces stock for physical games  
+- Prevents stock from going below zero  
+
+### Cart Clearing  
+- Clears the authenticated user’s cart  
+- Ensures carts are not cleared prematurely  
+
+This ensures that the checkout flow is secure and consistent with real e‑commerce behaviour.
+
+---
+
 ### Shopping Cart
 
 The cart allows users to:
@@ -385,11 +410,13 @@ Paid games use Stripe Checkout for secure payment processing.
 The flow:
 
 1. User reviews their cart and proceeds to checkout.
-2. A Stripe Checkout Session is created server‑side.
+2. A Stripe Checkout Session is created server‑side and linked to an Order.
 3. The user is redirected to Stripe’s hosted payment page.
 4. After a successful payment:
-   - An **Order** is created in the database.
-   - The user is shown a confirmation page.
+   - Stripe sends a `checkout.session.completed` webhook event.
+   - The Order is marked as **paid**.
+   - **Stock is reduced** for physical items.
+   - **The user’s cart is automatically cleared**.
 5. If the payment fails or is cancelled:
    - The user is returned to the site with a helpful error message.
 
@@ -399,13 +426,18 @@ Stripe is used in **test mode**, meaning no real payments are processed.
 
 ### Webhooks
 
-GamerBay includes a Stripe webhook handler to:
+GamerBay includes a Stripe webhook handler that ensures orders are only finalised after Stripe confirms payment.
 
-- Verify payment events
-- Create orders only after Stripe confirms a successful payment
-- Prevent duplicate or fraudulent order creation
+The webhook performs the following actions:
 
-This ensures the checkout process is reliable and secure.
+- Validates the event using Stripe’s signing secret  
+- Matches the Stripe session ID to an existing Order  
+- Marks the Order as **paid**  
+- **Reduces stock** for physical games  
+- **Clears the authenticated user’s cart**  
+- Ensures no duplicate or fraudulent orders are created  
+
+This makes the checkout process secure, reliable, and production‑ready.
 
 ---
 
@@ -779,6 +811,18 @@ Several improvements and new features are planned for future versions of GamerBa
 - **User Achievements / Badges** for gamified engagement  
 - **Dynamic Recommendations** based on user behaviour  
 - **Multi‑currency Support** for international users  
+
+---
+
+## Changelog
+
+### 13 May 2026 — Checkout System Upgrade
+- Added Stripe Checkout integration for single and multi‑item purchases  
+- Implemented Stripe webhook for secure post‑payment processing  
+- Added automatic cart clearing after successful payment  
+- Added stock reduction logic for physical games  
+- Refactored checkout views and order creation  
+- Improved reliability and production readiness of the entire checkout pipeline  
 
 ---
 

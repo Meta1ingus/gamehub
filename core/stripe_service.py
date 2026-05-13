@@ -4,6 +4,20 @@ from django.conf import settings
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # -----------------------------
+# Helper: Build absolute URLs
+# -----------------------------
+def build_absolute_url(path):
+    """
+    Ensures Stripe redirects to the correct domain.
+    Uses settings.SITE_URL which YOU must define in settings.py:
+    
+    SITE_URL = "https://gamerbay.uk"
+    """
+    base = getattr(settings, "SITE_URL", "https://gamerbay.uk")
+    return f"{base}{path}"
+
+
+# -----------------------------
 # Single-item checkout (Buy Now)
 # -----------------------------
 def create_checkout_session(game, order):
@@ -25,9 +39,10 @@ def create_checkout_session(game, order):
         metadata={
             "order_id": order.id,
         },
-        success_url="http://localhost:8000/checkout/success/",
-        cancel_url="http://localhost:8000/checkout/cancel/",
+        success_url=build_absolute_url("/checkout/success/"),
+        cancel_url=build_absolute_url("/checkout/cancel/"),
     )
+
 
 # -----------------------------
 # Multi-item cart checkout
@@ -40,9 +55,10 @@ def create_checkout_session_cart(line_items, order):
         metadata={
             "order_id": order.id,
         },
-        success_url="http://localhost:8000/checkout/success/",
-        cancel_url="http://localhost:8000/checkout/cancel/",
+        success_url=build_absolute_url("/checkout/success/"),
+        cancel_url=build_absolute_url("/checkout/cancel/"),
     )
+
 
 # -----------------------------
 # Build line items from cart

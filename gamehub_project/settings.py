@@ -12,6 +12,9 @@ STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Base URL for building absolute links (used by Stripe)
+SITE_URL = "https://gamerbay.uk"
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -21,8 +24,12 @@ SECRET_KEY = 'django-insecure-byn8$h%p*78rx8hx)kda)&3^15rn#)-1^4v#ba^c1j-da($9=n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    "gamerbay.uk",
+    "www.gamerbay.uk",
+    "127.0.0.1",
+    "localhost",
+]
 
 # Application definition
 
